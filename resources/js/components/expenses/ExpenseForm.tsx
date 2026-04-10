@@ -36,7 +36,7 @@ export interface Expense {
   id: number;
   amount: string;
   category_id: number | null;
-  category?: Category | null;
+  category: Category | null;
   description: string | null;
   date: string;
 }

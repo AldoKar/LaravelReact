@@ -63,6 +63,9 @@ interface ExpenseChartsProps {
 }
 
 export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
+  const getCategoryName = (expense: Expense) =>
+    expense.category?.name ?? 'Sin categoría';
+
   // ─── Data: Gastos por Fecha (Line chart) ──────────────────────────
   const dateData = useMemo(() => {
     const grouped: Record<string, number> = {};
@@ -108,7 +111,8 @@ export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
   const categoryData = useMemo(() => {
     const grouped: Record<string, number> = {};
     expenses.forEach((e) => {
-      grouped[e.category] = (grouped[e.category] || 0) + parseFloat(e.amount);
+      const categoryName = getCategoryName(e);
+      grouped[categoryName] = (grouped[categoryName] || 0) + parseFloat(e.amount);
     });
 
     const sorted = Object.entries(grouped).sort(([, a], [, b]) => b - a);
@@ -138,12 +142,15 @@ export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
       .slice(0, 10);
 
     const labels = sorted.map(
-      (e) =>
-        `${e.category.substring(0, 12)}${e.category.length > 12 ? '…' : ''} (${new Date(e.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })})`,
+      (e) => {
+        const categoryName = getCategoryName(e);
+
+        return `${categoryName.substring(0, 12)}${categoryName.length > 12 ? '…' : ''} (${new Date(e.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })})`;
+      },
     );
     const values = sorted.map((e) => parseFloat(e.amount));
-    const bgColors = sorted.map((e) => getColor(e.category).bg);
-    const borderColors = sorted.map((e) => getColor(e.category).border);
+    const bgColors = sorted.map((e) => getColor(getCategoryName(e)).bg);
+    const borderColors = sorted.map((e) => getColor(getCategoryName(e)).border);
 
     return {
       labels,
