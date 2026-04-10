@@ -82,7 +82,29 @@ class ExpenseController extends Controller
 
         // Check restrictions for child users
         if ($user->isChild()) {
-            // TODO: Implement schedule restriction validation (Requirement 7)
+            // Check schedule restriction (Requirement 7)
+            $scheduleRestriction = \App\Models\ScheduleRestriction::where('child_id', $user->id)->first();
+            
+            if ($scheduleRestriction) {
+                $now = now();
+                $currentDay = strtolower($now->format('l')); // e.g., "monday"
+                $currentTime = $now->format('H:i:s');
+                
+                $allowedDays = $scheduleRestriction->days;
+                $startTime = $scheduleRestriction->start_time->format('H:i:s');
+                $endTime = $scheduleRestriction->end_time->format('H:i:s');
+                
+                // Check if current day is NOT in the allowed days OR time is outside the allowed interval
+                $isDayAllowed = in_array($currentDay, $allowedDays);
+                $isTimeAllowed = $currentTime >= $startTime && $currentTime <= $endTime;
+                
+                if (!$isDayAllowed || !$isTimeAllowed) {
+                    return back()->withErrors([
+                        'schedule' => 'No puedes registrar gastos en este horario'
+                    ]);
+                }
+            }
+            
             // TODO: Implement category restriction validation (Requirement 8)
         }
 

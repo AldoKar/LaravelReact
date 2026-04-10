@@ -52,9 +52,9 @@
 ## Fase 3 — Restricciones (Horas 4-6)
 
 - [ ] 7. Restricciones de horario (Req 7)
-  - [ ] 7.1 Crear migración y modelo `ScheduleRestriction` con relación `belongsTo User (child)`
-  - [ ] 7.2 Crear `RestrictionController` con métodos para horario: `storeSchedule`, `updateSchedule`
-  - [ ] 7.3 Agregar validación de horario en `ExpenseController@store`: verificar si el hijo tiene restricción activa y si el momento actual está fuera del intervalo
+  - [x] 7.1 Crear migración y modelo `ScheduleRestriction` con relación `belongsTo User (child)`
+  - [x] 7.2 Crear `RestrictionController` con métodos para horario: `storeSchedule`, `updateSchedule`
+  - [x] 7.3 Agregar validación de horario en `ExpenseController@store`: verificar si el hijo tiene restricción activa y si el momento actual está fuera del intervalo
   - [ ] 7.4 Registrar rutas `/children/{child}/restrictions/schedule`
   - [ ] 7.5 Crear UI en `resources/js/pages/restrictions/index.tsx` para configurar horarios (selector de días y horas)
 
