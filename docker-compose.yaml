@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  composer:
+    image: composer:latest
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - composer_home:/tmp
+    # Optional: Set user to match host user to avoid permission issues
+    user: "${UID:-1000}:${GID:-1000}"
+
+volumes:
+  composer_home:
