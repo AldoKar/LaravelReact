@@ -12,34 +12,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { capitalFamily, dashboard, travel } from '@/routes';
 import { index as expenses } from '@/routes/expenses';
 import { index as children } from '@/routes/children';
 import type { NavItem } from '@/types';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Gastos',
-        href: expenses(),
-        icon: Receipt,
-    },
-    {
-        title: 'Cuentas Hijo',
-        href: children(),
-        icon: Users,
-    },
-    {
-        title: 'Misiones',
-        href: '/missions',
-        icon: Trophy,
-    },
-
-];
 
 
 export function AppSidebar() {
