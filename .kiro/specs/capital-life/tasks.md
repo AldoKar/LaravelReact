@@ -40,11 +40,11 @@
   - [x] 5.2 Crear `ChildRequest` con validaciones (email único, no existente como padre, límite de 5 hijos)
   - [x] 5.3 Registrar rutas `/children` en `routes/web.php` con middleware `auth`
   - [x] 5.4 Crear página `resources/js/pages/children/index.tsx` con listado de hijos y formulario de creación
-  - [ ] 5.5 Crear componente `ChildCard.tsx` con acciones de ver dashboard y eliminar
+  - [x] 5.5 Crear componente `ChildCard.tsx` con acciones de ver dashboard y eliminar
 
 - [ ] 6. Dashboard del hijo (Req 6)
-  - [ ] 6.1 Extender `DashboardController` para aceptar un `child_id` opcional y retornar datos del hijo
-  - [ ] 6.2 Crear página `resources/js/pages/children/show.tsx` con el dashboard del hijo (reutiliza componentes del dashboard principal)
+  - [x] 6.1 Extender `DashboardController` para aceptar un `child_id` opcional y retornar datos del hijo
+  - [x] 6.2 Crear página `resources/js/pages/children/show.tsx` con el dashboard del hijo (reutiliza componentes del dashboard principal)
   - [ ] 6.3 Adaptar `dashboard.tsx` para mostrar saldo disponible cuando el usuario es hijo
 
 ---
