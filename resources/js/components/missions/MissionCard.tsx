@@ -124,7 +124,7 @@ export function MissionCard({ mission, userRole }: MissionCardProps) {
           {mission.description && (
             <p className="text-sm text-muted-foreground">{mission.description}</p>
           )}
-          
+
           <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3">
             <span className="text-sm font-medium">Recompensa</span>
             <span className="text-lg font-bold text-amber-500">
@@ -191,7 +191,7 @@ export function MissionCard({ mission, userRole }: MissionCardProps) {
                   <AlertDialogHeader>
                     <AlertDialogTitle>¿Aprobar misión?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Se acreditarán {formatCurrency(mission.reward)} al saldo de {mission.child?.name}.
+                      Se acreditarán {formatCurrency(mission.reward)} al saldo de {mission.child?.name} y se registrará como gasto familiar en tu cuenta.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

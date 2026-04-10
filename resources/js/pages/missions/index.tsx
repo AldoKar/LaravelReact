@@ -57,6 +57,7 @@ export default function MissionsIndex({ missions, userRole, children }: Missions
   const activeMissions = missions.filter((m) => m.status === 'activa');
   const inReviewMissions = missions.filter((m) => m.status === 'en_revision');
   const completedMissions = missions.filter((m) => m.status === 'completada');
+  const rejectedMissions = missions.filter((m) => m.status === 'rechazada');
 
   return (
     <>
@@ -216,6 +217,17 @@ export default function MissionsIndex({ missions, userRole, children }: Missions
                 <h2 className="mb-3 text-lg font-semibold">Completadas</h2>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {completedMissions.map((mission) => (
+                    <MissionCard key={mission.id} mission={mission} userRole={userRole} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {rejectedMissions.length > 0 && (
+              <div>
+                <h2 className="mb-3 text-lg font-semibold">Rechazadas</h2>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {rejectedMissions.map((mission) => (
                     <MissionCard key={mission.id} mission={mission} userRole={userRole} />
                   ))}
                 </div>

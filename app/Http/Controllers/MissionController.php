@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Mission;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -164,17 +166,54 @@ class MissionController extends Controller
             ]);
         }
 
-        // Use transaction to update mission status and child balance (Req 10.3)
-        DB::transaction(function () use ($mission) {
-            $mission->update([
+        DB::transaction(function () use ($mission, $user) {
+            $lockedMission = Mission::query()
+                ->whereKey($mission->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedParent = User::query()
+                ->whereKey($user->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedChild = User::query()
+                ->whereKey($lockedMission->child_id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ((float) $lockedParent->balance < (float) $lockedMission->reward) {
+                throw ValidationException::withMessages([
+                    'message' => 'No tienes saldo suficiente para aprobar esta misión.',
+                ]);
+            }
+
+            $familyCategory = Category::firstOrCreate(
+                [
+                    'user_id' => $lockedParent->id,
+                    'name' => 'Family',
+                ],
+                [
+                    'icon' => null,
+                ],
+            );
+
+            $lockedMission->update([
                 'status' => 'completada',
             ]);
 
-            $child = $mission->child;
-            $child->increment('balance', $mission->reward);
+            $lockedChild->increment('balance', $lockedMission->reward);
+            $lockedParent->decrement('balance', $lockedMission->reward);
+
+            $lockedParent->expenses()->create([
+                'category_id' => $familyCategory->id,
+                'amount' => $lockedMission->reward,
+                'description' => 'Recompensa por misión: '.$lockedMission->title.' ('.$lockedChild->name.')',
+                'date' => now()->toDateString(),
+            ]);
         });
 
-        return back()->with('success', 'Misión aprobada y recompensa acreditada');
+        return back()->with('success', 'Misión aprobada, recompensa acreditada y gasto familiar registrado');
     }
 
     /**
@@ -205,7 +244,7 @@ class MissionController extends Controller
         ]);
 
         $mission->update([
-            'status' => 'activa',
+            'status' => 'rechazada',
             'reject_reason' => $validated['reject_reason'] ?? null,
         ]);
 

@@ -22,12 +22,17 @@ class ExpenseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->user();
+        
         return [
             'amount' => 'required|numeric|gt:0',
             'category_id' => [
                 'required',
                 'integer',
-                Rule::exists('categories', 'id')->where(fn ($query) => $query->where('user_id', $this->user()->id)),
+                Rule::exists('categories', 'id')->where(function ($query) use ($user) {
+                    // Allow categories that belong to the current user
+                    $query->where('user_id', $user->id);
+                }),
             ],
             'description' => 'nullable|string|max:255',
             'date' => 'required|date',

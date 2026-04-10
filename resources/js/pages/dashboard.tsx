@@ -39,6 +39,26 @@ type ExpenseSummaryItem = {
     total: number;
 };
 
+type Expense = {
+    id: number;
+    amount: string;
+    description: string | null;
+    date: string;
+    category: {
+        id: number;
+        name: string;
+    };
+};
+
+type Stats = {
+    totalThisMonth: number;
+    expensesByCategory: Array<{
+        category: string;
+        total: number;
+    }>;
+    recentExpenses: Expense[];
+};
+
 type CurrentUser = {
     id: number;
     name: string;
@@ -69,14 +89,16 @@ type DashboardProps = {
     currentUser: CurrentUser;
     children: Child[];
     categoryRestrictions: CategoryRestriction[];
+    stats: Stats;
 };
 
-export default function Dashboard({ currentUser, children, categoryRestrictions }: DashboardProps) {
+export default function Dashboard({ currentUser, children, categoryRestrictions, stats }: DashboardProps) {
     const [selectedPeriod, setSelectedPeriod] = useState<ExpensePeriod>('day');
     const [summaryRefreshToken, setSummaryRefreshToken] = useState(0);
     const [summary, setSummary] = useState<ExpenseSummaryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
 
@@ -173,6 +195,24 @@ export default function Dashboard({ currentUser, children, categoryRestrictions 
             currency: 'USD',
         }).format(amount);
     };
+
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+    };
+
+    // Get unique categories from recent expenses
+    const categories = Array.from(
+        new Set(stats.recentExpenses.map((expense) => expense.category.name))
+    );
+
+    // Filter expenses by category
+    const filteredExpenses = categoryFilter === 'all'
+        ? stats.recentExpenses
+        : stats.recentExpenses.filter((expense) => expense.category.name === categoryFilter);
 
     return (
         <>
@@ -370,6 +410,74 @@ export default function Dashboard({ currentUser, children, categoryRestrictions 
                         </CardContent>
                     </Card>
                 </div>
+
+                {/* ─── RECENT EXPENSES LOG WITH FILTERS ───────────────────── */}
+                <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <CardTitle>Gastos Recientes</CardTitle>
+                                <CardDescription>
+                                    Últimos 5 gastos registrados
+                                </CardDescription>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <select
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="rounded-md border border-input bg-background px-3 py-1.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                >
+                                    <option value="all">Todas las categorías</option>
+                                    {categories.map((category) => (
+                                        <option key={category} value={category}>
+                                            {category}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        {filteredExpenses.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-8 text-center">
+                                <p className="text-sm text-muted-foreground">
+                                    No hay gastos registrados
+                                    {categoryFilter !== 'all' && ' en esta categoría'}
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                {filteredExpenses.map((expense) => (
+                                    <div
+                                        key={expense.id}
+                                        className="flex items-center justify-between rounded-lg border p-3 hover:bg-accent/50 transition-colors"
+                                    >
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                                                    {expense.category.name}
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                    {formatDate(expense.date)}
+                                                </span>
+                                            </div>
+                                            {expense.description && (
+                                                <p className="mt-1 text-sm text-muted-foreground">
+                                                    {expense.description}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="ml-4 text-right">
+                                            <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+                                                -{formatCurrency(parseFloat(expense.amount))}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
 
             </div>
         </>
