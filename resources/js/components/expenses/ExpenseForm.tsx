@@ -44,9 +44,10 @@ export interface Expense {
 interface ExpenseFormDialogProps {
   expense?: Expense;
   trigger?: React.ReactNode;
+  onSuccess?: () => void;
 }
 
-export function ExpenseFormDialog({ expense, trigger }: ExpenseFormDialogProps) {
+export function ExpenseFormDialog({ expense, trigger, onSuccess }: ExpenseFormDialogProps) {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
@@ -124,6 +125,7 @@ export function ExpenseFormDialog({ expense, trigger }: ExpenseFormDialogProps) 
       put(`/expenses/${expense.id}`, {
         onSuccess: () => {
           setOpen(false);
+          onSuccess?.();
         },
       });
     } else {
@@ -131,6 +133,7 @@ export function ExpenseFormDialog({ expense, trigger }: ExpenseFormDialogProps) 
         onSuccess: () => {
           reset();
           setOpen(false);
+          onSuccess?.();
         },
       });
     }
