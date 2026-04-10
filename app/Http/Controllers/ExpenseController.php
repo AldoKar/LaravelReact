@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenseRequest;
 use App\Models\Expense;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,6 +12,26 @@ use Inertia\Response;
 
 class ExpenseController extends Controller
 {
+    /**
+     * Return summed expenses for the authenticated user by period.
+     */
+    public function summary(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'period' => ['nullable', 'in:day,week,month'],
+            'periods' => ['nullable', 'integer', 'min:1', 'max:120'],
+        ]);
+
+        $period = $validated['period'] ?? 'day';
+        $periods = $validated['periods'] ?? 10;
+
+        return response()->json([
+            'period' => $period,
+            'periods' => $periods,
+            'data' => $request->user()->summedExpenses($period, $periods),
+        ]);
+    }
+
     /**
      * Display a listing of the user's expenses.
      */

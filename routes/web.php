@@ -13,6 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('capital-family', 'capital-family')->name('capital-family');
     Route::inertia('travel', 'travel')->name('travel');
 
+    Route::get('expenses/summary', [ExpenseController::class, 'summary'])->name('expenses.summary');
+
     // Expense routes
     Route::resource('expenses', ExpenseController::class)->only([
         'index', 'store', 'update', 'destroy'
