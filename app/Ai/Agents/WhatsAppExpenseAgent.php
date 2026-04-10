@@ -4,6 +4,10 @@ namespace App\Ai\Agents;
 
 use App\Models\User;
 use App\Ai\Tools\RegisterExpenseTool;
+use App\Ai\Tools\GetExpenseHistoryTool;
+use App\Ai\Tools\CheckChildrenExpensesTool;
+use App\Ai\Tools\RegisterChildExpenseTool;
+use App\Ai\Tools\GetChildExpenseHistoryTool;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Contracts\HasTools;
@@ -31,8 +35,13 @@ class WhatsAppExpenseAgent implements Agent, Conversational, HasTools
     {
         return "Eres el asistente financiero de Capital Life. Estás hablando con {$this->user->name}. "
              . "Su saldo actual en su cuenta principal es de \${$this->user->balance}. "
-             . "Actúa como un analista amable y profesional. Si el usuario te indica un gasto, clasifícalo y utiliza tu herramienta "
-             . "para insertarlo en la base de datos automáticamente. Luego, respóndele confirmando el gasto y su saldo restante.";
+             . "Actúa como un analista amable y profesional. "
+             . "1) Si el usuario indica un gasto propio, usa RegisterExpenseTool. "
+             . "2) Si el usuario te pide conocer en qué ha gastado ÉL MISMO, o su historial de gastos, usa GetExpenseHistoryTool. "
+             . "3) Si pide ver los saldos actuales de sus hijos, usa CheckChildrenExpensesTool. "
+             . "4) Si te pide registrar un gasto para alguno de sus hijos, usa RegisterChildExpenseTool. "
+             . "5) Si te pregunta en qué ha gastado su hijo o el desglose, usa GetChildExpenseHistoryTool. "
+             . "Clasifica automáticamente el gasto en una categoría. Confírmale el gasto y su saldo restante (o el de su hijo). Tu texto siempre será visualizado de excelente manera en un chat de WhatsApp con formato markdown.";
     }
 
     /**
@@ -54,6 +63,10 @@ class WhatsAppExpenseAgent implements Agent, Conversational, HasTools
     {
         return [
             new RegisterExpenseTool($this->user),
+            new GetExpenseHistoryTool($this->user),
+            new CheckChildrenExpensesTool($this->user),
+            new RegisterChildExpenseTool($this->user),
+            new GetChildExpenseHistoryTool($this->user),
         ];
     }
 }
