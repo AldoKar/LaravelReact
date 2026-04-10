@@ -90,20 +90,32 @@ class ExpenseController extends Controller
             
             if ($scheduleRestriction) {
                 $now = now();
-                $currentDay = strtolower($now->format('l')); // e.g., "monday"
-                $currentTime = $now->format('H:i:s');
+                $currentDay = strtolower($now->englishDayOfWeek); // e.g., "monday", "tuesday"
+                $currentTime = $now->format('H:i');
                 
                 $allowedDays = $scheduleRestriction->days;
-                $startTime = $scheduleRestriction->start_time->format('H:i:s');
-                $endTime = $scheduleRestriction->end_time->format('H:i:s');
+                $startTime = $scheduleRestriction->start_time->format('H:i');
+                $endTime = $scheduleRestriction->end_time->format('H:i');
                 
-                // Check if current day is NOT in the allowed days OR time is outside the allowed interval
+                // Check if current day is in the allowed days
                 $isDayAllowed = in_array($currentDay, $allowedDays);
+                
+                // Check if current time is within the allowed interval
                 $isTimeAllowed = $currentTime >= $startTime && $currentTime <= $endTime;
                 
                 if (!$isDayAllowed || !$isTimeAllowed) {
+                    $debugInfo = sprintf(
+                        'Día actual: %s (%s), Hora actual: %s, Días permitidos: %s, Horario: %s - %s',
+                        $currentDay,
+                        $isDayAllowed ? 'permitido' : 'NO permitido',
+                        $currentTime,
+                        implode(', ', $allowedDays),
+                        $startTime,
+                        $endTime
+                    );
+                    
                     return back()->withErrors([
-                        'schedule' => 'No puedes registrar gastos en este horario'
+                        'schedule' => 'No puedes registrar gastos en este horario. ' . $debugInfo
                     ]);
                 }
             }
@@ -140,20 +152,37 @@ class ExpenseController extends Controller
                     }
                 }
             }
+            
+            // Check if user has sufficient balance
+            if ($user->balance < $validated['amount']) {
+                return back()->withErrors([
+                    'amount' => 'Saldo insuficiente para registrar este gasto'
+                ]);
+            }
         }
 
-        DB::transaction(function () use ($user, $validated): void {
-            $lockedUser = User::query()
-                ->whereKey($user->id)
-                ->lockForUpdate()
-                ->firstOrFail();
+        try {
+            DB::transaction(function () use ($user, $validated): void {
+                $lockedUser = User::query()
+                    ->whereKey($user->id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
-            // Create the expense and reduce the available balance in the same transaction.
-            $lockedUser->expenses()->create($validated);
-            $lockedUser->decrement('balance', $validated['amount']);
-        });
+                // Create the expense
+                $lockedUser->expenses()->create($validated);
+                
+                // Only reduce balance for child users
+                if ($lockedUser->isChild()) {
+                    $lockedUser->decrement('balance', $validated['amount']);
+                }
+            });
 
-        return back()->with('success', 'Gasto registrado exitosamente');
+            return back()->with('success', 'Gasto registrado exitosamente');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => 'Error al registrar el gasto: ' . $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -182,7 +211,11 @@ class ExpenseController extends Controller
             $originalAmount = (float) $lockedExpense->amount;
 
             $lockedExpense->update($validated);
-            $lockedUser->increment('balance', $originalAmount - (float) $validated['amount']);
+            
+            // Only adjust balance for child users
+            if ($lockedUser->isChild()) {
+                $lockedUser->increment('balance', $originalAmount - (float) $validated['amount']);
+            }
         });
 
         return back()->with('success', 'Gasto actualizado exitosamente');
@@ -209,7 +242,11 @@ class ExpenseController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            $lockedUser->increment('balance', $lockedExpense->amount);
+            // Only restore balance for child users
+            if ($lockedUser->isChild()) {
+                $lockedUser->increment('balance', $lockedExpense->amount);
+            }
+            
             $lockedExpense->delete();
         });
 

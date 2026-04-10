@@ -121,11 +121,20 @@ export function ExpenseFormDialog({ expense, trigger, onSuccess }: ExpenseFormDi
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
+    // Validate that category is selected
+    if (!data.category_id || data.category_id === '') {
+      alert('Por favor selecciona una categoría');
+      return;
+    }
+
     if (isEditing) {
       put(`/expenses/${expense.id}`, {
         onSuccess: () => {
           setOpen(false);
           onSuccess?.();
+        },
+        onError: (errors) => {
+          console.error('Error al actualizar gasto:', errors);
         },
       });
     } else {
@@ -134,6 +143,9 @@ export function ExpenseFormDialog({ expense, trigger, onSuccess }: ExpenseFormDi
           reset();
           setOpen(false);
           onSuccess?.();
+        },
+        onError: (errors) => {
+          console.error('Error al crear gasto:', errors);
         },
       });
     }
@@ -184,13 +196,20 @@ export function ExpenseFormDialog({ expense, trigger, onSuccess }: ExpenseFormDi
                 value={data.category_id.toString()}
                 onValueChange={(value) => setData('category_id', Number(value))}
                 required
+                disabled={loadingCategories || categories.length === 0}
               >
                 <SelectTrigger
                   id="category"
                   className="w-full"
                   aria-invalid={!!errors.category_id}
                 >
-                  <SelectValue placeholder={loadingCategories ? 'Cargando categorías...' : 'Selecciona una categoría'} />
+                  <SelectValue placeholder={
+                    loadingCategories 
+                      ? 'Cargando categorías...' 
+                      : categories.length === 0 
+                        ? 'No hay categorías disponibles' 
+                        : 'Selecciona una categoría'
+                  } />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -200,6 +219,11 @@ export function ExpenseFormDialog({ expense, trigger, onSuccess }: ExpenseFormDi
                   ))}
                 </SelectContent>
               </Select>
+              {categories.length === 0 && !loadingCategories && (
+                <FieldDescription>
+                  No tienes categorías configuradas. Contacta al administrador.
+                </FieldDescription>
+              )}
               <FieldError errors={[{ message: errors.category_id }]} />
             </Field>
 
