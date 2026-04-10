@@ -13,12 +13,22 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { capitalFamily, dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Capital Family',
+        href: capitalFamily(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Capital Travel',
         href: dashboard(),
         icon: LayoutGrid,
     },
