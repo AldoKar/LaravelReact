@@ -121,34 +121,44 @@ class ExpenseController extends Controller
             }
             
             // Check category restriction (Requirement 8)
-            $categoryRestriction = CategoryRestriction::where('child_id', $user->id)
-                ->where('category_id', $validated['category_id'])
+            // Get the category name from the child's category
+            $childCategory = \App\Models\Category::where('id', $validated['category_id'])
+                ->where('user_id', $user->id)
                 ->first();
             
-            if ($categoryRestriction) {
-                // Check if category is blocked
-                if ($categoryRestriction->type === 'blocked') {
-                    return back()->withErrors([
-                        'category_id' => 'Tu padre ha bloqueado esta categoría'
-                    ]);
-                }
+            if ($childCategory) {
+                // Find if there's a restriction for this category name
+                $categoryRestriction = CategoryRestriction::where('child_id', $user->id)
+                    ->whereHas('category', function ($query) use ($childCategory) {
+                        $query->where('name', $childCategory->name);
+                    })
+                    ->first();
                 
-                // Check if monthly limit is reached
-                if ($categoryRestriction->type === 'limited') {
-                    $startOfMonth = now()->startOfMonth();
-                    $endOfMonth = now()->endOfMonth();
-                    
-                    $totalSpentThisMonth = Expense::where('user_id', $user->id)
-                        ->where('category_id', $validated['category_id'])
-                        ->whereBetween('date', [$startOfMonth, $endOfMonth])
-                        ->sum('amount');
-                    
-                    $newTotal = $totalSpentThisMonth + $validated['amount'];
-                    
-                    if ($newTotal > $categoryRestriction->monthly_limit) {
+                if ($categoryRestriction) {
+                    // Check if category is blocked
+                    if ($categoryRestriction->type === 'blocked') {
                         return back()->withErrors([
-                            'category_id' => 'Has alcanzado el límite mensual para esta categoría'
+                            'category_id' => 'Tu padre ha bloqueado esta categoría'
                         ]);
+                    }
+                    
+                    // Check if monthly limit is reached
+                    if ($categoryRestriction->type === 'limited') {
+                        $startOfMonth = now()->startOfMonth();
+                        $endOfMonth = now()->endOfMonth();
+                        
+                        $totalSpentThisMonth = Expense::where('user_id', $user->id)
+                            ->where('category_id', $validated['category_id'])
+                            ->whereBetween('date', [$startOfMonth, $endOfMonth])
+                            ->sum('amount');
+                        
+                        $newTotal = $totalSpentThisMonth + $validated['amount'];
+                        
+                        if ($newTotal > $categoryRestriction->monthly_limit) {
+                            return back()->withErrors([
+                                'category_id' => 'Has alcanzado el límite mensual para esta categoría'
+                            ]);
+                        }
                     }
                 }
             }
