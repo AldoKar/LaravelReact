@@ -73,6 +73,7 @@ type DashboardProps = {
 
 export default function Dashboard({ currentUser, children, categoryRestrictions }: DashboardProps) {
     const [selectedPeriod, setSelectedPeriod] = useState<ExpensePeriod>('day');
+    const [summaryRefreshToken, setSummaryRefreshToken] = useState(0);
     const [summary, setSummary] = useState<ExpenseSummaryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -119,7 +120,7 @@ export default function Dashboard({ currentUser, children, categoryRestrictions 
         void loadSummary();
 
         return () => controller.abort();
-    }, [selectedPeriod]);
+    }, [selectedPeriod, summaryRefreshToken]);
 
     useEffect(() => {
         if (!chartRef.current) {
@@ -290,7 +291,7 @@ export default function Dashboard({ currentUser, children, categoryRestrictions 
                 )}
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    
+
                     {/* ─── LISTA DE ALUMNOS / HIJOS (only for parents) ────────────────────────────── */}
                     {currentUser.role === 'parent' && children.length > 0 && (
                         <Card className="col-span-1 border-sidebar-border dark:border-sidebar-border shadow-sm flex flex-col">
@@ -330,7 +331,7 @@ export default function Dashboard({ currentUser, children, categoryRestrictions 
                                 <CardTitle>Actividad de Gastos</CardTitle>
                                 <CardDescription>Tus gastos en la plataforma</CardDescription>
                             </div>
-                            <ExpenseFormDialog />
+                            <ExpenseFormDialog onSuccess={() => setSummaryRefreshToken((token) => token + 1)} />
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-wrap items-center gap-2 mb-4">
