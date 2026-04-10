@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChildController;
 use App\Http\Controllers\ExpenseController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -18,6 +19,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Expense routes
     Route::resource('expenses', ExpenseController::class)->only([
         'index', 'store', 'update', 'destroy'
+    ]);
+
+    // Children routes
+    Route::resource('children', ChildController::class)->only([
+        'index', 'store', 'destroy'
     ]);
 });
 

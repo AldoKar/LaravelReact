@@ -36,10 +36,10 @@
 ## Fase 2 — Control Parental Base (Horas 3-5)
 
 - [ ] 5. Gestión de cuentas hijo (Req 5)
-  - [ ] 5.1 Crear `ChildController` con métodos `index`, `store`, `destroy`
-  - [ ] 5.2 Crear `ChildRequest` con validaciones (email único, no existente como padre, límite de 5 hijos)
-  - [ ] 5.3 Registrar rutas `/children` en `routes/web.php` con middleware `auth`
-  - [ ] 5.4 Crear página `resources/js/pages/children/index.tsx` con listado de hijos y formulario de creación
+  - [x] 5.1 Crear `ChildController` con métodos `index`, `store`, `destroy`
+  - [x] 5.2 Crear `ChildRequest` con validaciones (email único, no existente como padre, límite de 5 hijos)
+  - [x] 5.3 Registrar rutas `/children` en `routes/web.php` con middleware `auth`
+  - [x] 5.4 Crear página `resources/js/pages/children/index.tsx` con listado de hijos y formulario de creación
   - [ ] 5.5 Crear componente `ChildCard.tsx` con acciones de ver dashboard y eliminar
 
 - [ ] 6. Dashboard del hijo (Req 6)
