@@ -47,6 +47,11 @@ class User extends Authenticatable
         return $this->hasMany(Expense::class);
     }
 
+    public function categories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
     /**
      * Return summed expenses for the last N periods.
      *
@@ -163,5 +168,42 @@ class User extends Authenticatable
     public function isChild(): bool
     {
         return $this->role === 'child';
+    }
+
+    public function ensureDefaultCategories(): void
+    {
+        if ($this->categories()->exists()) {
+            return;
+        }
+
+        $categoryNames = [
+            'Groceries',
+            'Dining Out',
+            'Coffee & Snacks',
+            'Fuel & Vehicle Care',
+            'Public Transit & Rideshare',
+            'Rent or Mortgage',
+            'Utilities',
+            'Digital Services',
+            'Home Maintenance',
+            'Medical & Pharmacy',
+            'Fitness & Wellness',
+            'Personal Care',
+            'Subscriptions & Streaming',
+            'Social & Events',
+            'Clothing & Accessories',
+            'Hobbies',
+            'Education & Training',
+            'Books & Media',
+            'Debt & Interest',
+            'Gifts & Donations',
+        ];
+
+        foreach ($categoryNames as $name) {
+            $this->categories()->create([
+                'name' => $name,
+                'icon' => null,
+            ]);
+        }
     }
 }

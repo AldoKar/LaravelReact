@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user->expenses()->delete();
+        $user->categories()->delete();
+        $user->ensureDefaultCategories();
 
         Expense::factory()
             ->count(20)

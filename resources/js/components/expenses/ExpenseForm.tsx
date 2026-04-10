@@ -23,26 +23,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { PlusIcon } from 'lucide-react';
 
-export const CATEGORIES = [
-  'Alimentación',
-  'Transporte',
-  'Entretenimiento',
-  'Salud',
-  'Educación',
-  'Hogar',
-  'Ropa',
-  'Otros',
-] as const;
-
-type Category = (typeof CATEGORIES)[number];
+export interface Category {
+  id: number;
+  name: string;
+  icon: string | null;
+}
 
 export interface Expense {
   id: number;
   amount: string;
-  category: Category;
+  category_id: number | null;
+  category?: Category | null;
   description: string | null;
   date: string;
 }
@@ -54,25 +48,65 @@ interface ExpenseFormDialogProps {
 
 export function ExpenseFormDialog({ expense, trigger }: ExpenseFormDialogProps) {
   const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
   const isEditing = !!expense;
 
   const { data, setData, post, put, processing, errors, reset } = useForm({
     amount: expense?.amount || '',
-    category: expense?.category || ('' as Category | ''),
+    category_id: expense?.category_id || '',
     description: expense?.description || '',
     date: expense?.date || new Date().toISOString().split('T')[0],
   });
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadCategories = async () => {
+      if (categories.length > 0) {
+        return;
+      }
+
+      setLoadingCategories(true);
+
+      try {
+        const response = await fetch('/categories', {
+          headers: {
+            Accept: 'application/json',
+          },
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error('No se pudieron cargar las categorías.');
+        }
+
+        const payload = await response.json();
+        setCategories(payload.categories ?? []);
+      } catch {
+        setCategories([]);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    if (open) {
+      void loadCategories();
+    }
+
+    return () => controller.abort();
+  }, [open, categories.length]);
+
   // Update form data when dialog opens
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
-    
+
     if (newOpen) {
       if (expense) {
         // Editing: populate with expense data
         setData({
           amount: expense.amount,
-          category: expense.category,
+          category_id: expense.category_id ?? '',
           description: expense.description || '',
           date: expense.date,
         });
@@ -144,26 +178,26 @@ export function ExpenseFormDialog({ expense, trigger }: ExpenseFormDialogProps) 
             <Field>
               <FieldLabel htmlFor="category">Categoría</FieldLabel>
               <Select
-                value={data.category}
-                onValueChange={(value) => setData('category', value as Category)}
+                value={data.category_id.toString()}
+                onValueChange={(value) => setData('category_id', Number(value))}
                 required
               >
                 <SelectTrigger
                   id="category"
                   className="w-full"
-                  aria-invalid={!!errors.category}
+                  aria-invalid={!!errors.category_id}
                 >
-                  <SelectValue placeholder="Selecciona una categoría" />
+                  <SelectValue placeholder={loadingCategories ? 'Cargando categorías...' : 'Selecciona una categoría'} />
                 </SelectTrigger>
                 <SelectContent>
-                  {CATEGORIES.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={String(category.id)}>
+                      {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <FieldError errors={[{ message: errors.category }]} />
+              <FieldError errors={[{ message: errors.category_id }]} />
             </Field>
 
             <Field>

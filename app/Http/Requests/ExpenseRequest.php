@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ExpenseRequest extends FormRequest
@@ -23,7 +24,11 @@ class ExpenseRequest extends FormRequest
     {
         return [
             'amount' => 'required|numeric|gt:0',
-            'category' => 'required|in:Alimentación,Transporte,Entretenimiento,Salud,Educación,Hogar,Ropa,Otros',
+            'category_id' => [
+                'required',
+                'integer',
+                Rule::exists('categories', 'id')->where(fn ($query) => $query->where('user_id', $this->user()->id)),
+            ],
             'description' => 'nullable|string|max:255',
             'date' => 'required|date',
         ];
@@ -40,8 +45,8 @@ class ExpenseRequest extends FormRequest
             'amount.required' => 'El monto es obligatorio.',
             'amount.numeric' => 'El monto debe ser un número.',
             'amount.gt' => 'El monto debe ser mayor a cero.',
-            'category.required' => 'Selecciona una categoría.',
-            'category.in' => 'La categoría seleccionada no es válida.',
+            'category_id.required' => 'Selecciona una categoría.',
+            'category_id.exists' => 'La categoría seleccionada no es válida.',
             'description.max' => 'La descripción no puede exceder 255 caracteres.',
             'date.required' => 'La fecha es obligatoria.',
             'date.date' => 'La fecha no es válida.',

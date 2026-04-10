@@ -25,36 +25,50 @@ class ExpenseFactory extends Factory
      */
     public function definition(): array
     {
-        $categories = [
-            'Groceries',
-            'Dining Out',
-            'Coffee & Snacks',
-            'Fuel & Vehicle Care',
-            'Public Transit & Rideshare',
-            'Rent or Mortgage',
-            'Utilities',
-            'Digital Services',
-            'Home Maintenance',
-            'Medical & Pharmacy',
-            'Fitness & Wellness',
-            'Personal Care',
-            'Subscriptions & Streaming',
-            'Social & Events',
-            'Clothing & Accessories',
-            'Hobbies',
-            'Education & Training',
-            'Books & Media',
-            'Debt & Interest',
-            'Gifts & Donations'
-        ];
-
-
         return [
             'user_id' => User::factory(),
+            'category_id' => null,
             'amount' => fake()->randomFloat(2, 1, 5000),
-            'category' => fake()->randomElement($categories),
             'description' => fake()->optional()->sentence(),
             'date' => fake()->dateTimeBetween('first day of last month', 'last day of last month')->format('Y-m-d'),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Expense $expense): void {
+            $category = $expense->user->categories()->inRandomOrder()->first();
+
+            if ($category === null) {
+                $category = $expense->user->categories()->create([
+                    'name' => fake()->randomElement([
+                        'Groceries',
+                        'Dining Out',
+                        'Coffee & Snacks',
+                        'Fuel & Vehicle Care',
+                        'Public Transit & Rideshare',
+                        'Rent or Mortgage',
+                        'Utilities',
+                        'Digital Services',
+                        'Home Maintenance',
+                        'Medical & Pharmacy',
+                        'Fitness & Wellness',
+                        'Personal Care',
+                        'Subscriptions & Streaming',
+                        'Social & Events',
+                        'Clothing & Accessories',
+                        'Hobbies',
+                        'Education & Training',
+                        'Books & Media',
+                        'Debt & Interest',
+                        'Gifts & Donations',
+                    ]),
+                    'icon' => null,
+                ]);
+            }
+
+            $expense->category()->associate($category);
+            $expense->save();
+        });
     }
 }

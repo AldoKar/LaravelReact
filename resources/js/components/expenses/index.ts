@@ -1,2 +1,2 @@
-export { ExpenseFormDialog, CATEGORIES } from './ExpenseForm';
-export type { Expense } from './ExpenseForm';
+export { ExpenseFormDialog } from './ExpenseForm';
+export type { Category, Expense } from './ExpenseForm';
