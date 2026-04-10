@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\CarbonInterface;
+use Database\Factories\CategoryFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -176,30 +177,7 @@ class User extends Authenticatable
             return;
         }
 
-        $categoryNames = [
-            'Groceries',
-            'Dining Out',
-            'Coffee & Snacks',
-            'Fuel & Vehicle Care',
-            'Public Transit & Rideshare',
-            'Rent or Mortgage',
-            'Utilities',
-            'Digital Services',
-            'Home Maintenance',
-            'Medical & Pharmacy',
-            'Fitness & Wellness',
-            'Personal Care',
-            'Subscriptions & Streaming',
-            'Social & Events',
-            'Clothing & Accessories',
-            'Hobbies',
-            'Education & Training',
-            'Books & Media',
-            'Debt & Interest',
-            'Gifts & Donations',
-        ];
-
-        foreach ($categoryNames as $name) {
+        foreach (CategoryFactory::CATEGORY_NAMES as $name) {
             $this->categories()->create([
                 'name' => $name,
                 'icon' => null,
