@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChildController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\RestrictionController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -29,6 +30,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('children', ChildController::class)->only([
         'index', 'show', 'store', 'destroy'
     ]);
+
+    // Restrictions routes
+    Route::get('children/{child}/restrictions', [RestrictionController::class, 'index'])
+        ->name('children.restrictions.index');
+    Route::post('children/{child}/restrictions/schedule', [RestrictionController::class, 'storeSchedule'])
+        ->name('children.restrictions.schedule.store');
+    Route::put('children/{child}/restrictions/schedule', [RestrictionController::class, 'updateSchedule'])
+        ->name('children.restrictions.schedule.update');
 });
 
 require __DIR__.'/settings.php';

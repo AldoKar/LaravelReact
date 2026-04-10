@@ -39,32 +39,32 @@ type ExpenseSummaryItem = {
     total: number;
 };
 
-// ============================================================================
-// MOCK DATA: SIMULANDO DATOS QUE VENDRÍAN DE SUPABASE
-// ============================================================================
-const MOCK_SUPABASE_DATA = {
-    // Mi dinero / Sueldo / Monto
-    cuentaPrincipal: {
-        montoDisponible: 3450.50,
-    },
-    // Mis Hijos
-    hijos: [
-        { id: 1, nombre: 'Ana', monto: 120.00, avatar: 'A' },
-        { id: 2, nombre: 'Leo', monto: 45.50, avatar: 'L' },
-        { id: 3, nombre: 'Sofía', monto: 300.00, avatar: 'S' },
-    ]
+type CurrentUser = {
+    id: number;
+    name: string;
+    role: 'parent' | 'child';
+    balance: number;
 };
 
-export default function Dashboard() {
+type Child = {
+    id: number;
+    nombre: string;
+    monto: number;
+    avatar: string;
+};
+
+type DashboardProps = {
+    currentUser: CurrentUser;
+    children: Child[];
+};
+
+export default function Dashboard({ currentUser, children }: DashboardProps) {
     const [selectedPeriod, setSelectedPeriod] = useState<ExpensePeriod>('day');
     const [summary, setSummary] = useState<ExpenseSummaryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
-
-    // Simulated Supabase fetch state
-    const [supabaseData] = useState(MOCK_SUPABASE_DATA);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -175,78 +175,103 @@ export default function Dashboard() {
 
                 {/* ─── TARJETAS DE RESUMEN (SUPABASE DATA) ───────────────────── */}
                 <div className="grid gap-4 md:grid-cols-2">
-                    {/* Mi Dinero / Monto Disponible */}
-                    <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Dinero Disponible
-                            </CardTitle>
-                            <WalletIcon className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold text-primary">
-                                {formatCurrency(supabaseData.cuentaPrincipal.montoDisponible)}
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Saldo actual en tu cuenta
-                            </p>
-                        </CardContent>
-                    </Card>
+                    {/* Conditional rendering based on user role */}
+                    {currentUser.role === 'child' ? (
+                        // Child user: Show available balance
+                        <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Saldo Disponible
+                                </CardTitle>
+                                <CircleDollarSign className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold text-primary">
+                                    {formatCurrency(currentUser.balance)}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Tu dinero disponible
+                                </p>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        // Parent user: Show available money and children count
+                        <>
+                            {/* Mi Dinero / Monto Disponible */}
+                            <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">
+                                        Dinero Disponible
+                                    </CardTitle>
+                                    <WalletIcon className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold text-primary">
+                                        {formatCurrency(currentUser.balance)}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Saldo actual en tu cuenta
+                                    </p>
+                                </CardContent>
+                            </Card>
 
-
-                    {/* Conteo de Hijos */}
-                    <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Mis Hijos
-                            </CardTitle>
-                            <UsersIcon className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {supabaseData.hijos.length}
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Cuentas de menores vinculadas
-                            </p>
-                        </CardContent>
-                    </Card>
+                            {/* Conteo de Hijos */}
+                            <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">
+                                        Mis Hijos
+                                    </CardTitle>
+                                    <UsersIcon className="h-4 w-4 text-muted-foreground" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">
+                                        {children.length}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        Cuentas de menores vinculadas
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </>
+                    )}
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     
-                    {/* ─── LISTA DE ALUMNOS / HIJOS ────────────────────────────── */}
-                    <Card className="col-span-1 border-sidebar-border dark:border-sidebar-border shadow-sm flex flex-col">
-                        <CardHeader>
-                            <CardTitle>Cuentas de los Hijos</CardTitle>
-                            <CardDescription>
-                                Balances actuales de tus hijos.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex-1">
-                            <div className="space-y-6">
-                                {supabaseData.hijos.map((hijo) => (
-                                    <div key={hijo.id} className="flex items-center">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
-                                            {hijo.avatar}
+                    {/* ─── LISTA DE ALUMNOS / HIJOS (only for parents) ────────────────────────────── */}
+                    {currentUser.role === 'parent' && children.length > 0 && (
+                        <Card className="col-span-1 border-sidebar-border dark:border-sidebar-border shadow-sm flex flex-col">
+                            <CardHeader>
+                                <CardTitle>Cuentas de los Hijos</CardTitle>
+                                <CardDescription>
+                                    Balances actuales de tus hijos.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex-1">
+                                <div className="space-y-6">
+                                    {children.map((hijo) => (
+                                        <div key={hijo.id} className="flex items-center">
+                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                                                {hijo.avatar}
+                                            </div>
+                                            <div className="ml-4 space-y-1">
+                                                <p className="text-sm font-medium leading-none">{hijo.nombre}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Cuenta vinculada
+                                                </p>
+                                            </div>
+                                            <div className="ml-auto font-medium text-emerald-600 dark:text-emerald-400">
+                                                {formatCurrency(hijo.monto)}
+                                            </div>
                                         </div>
-                                        <div className="ml-4 space-y-1">
-                                            <p className="text-sm font-medium leading-none">{hijo.nombre}</p>
-                                            <p className="text-sm text-muted-foreground">
-                                                Cuenta vinculada
-                                            </p>
-                                        </div>
-                                        <div className="ml-auto font-medium text-emerald-600 dark:text-emerald-400">
-                                            {formatCurrency(hijo.monto)}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     {/* ─── GRÁFICO DE GASTOS ORIGINAL ──────────────────────────── */}
-                    <Card className="col-span-1 lg:col-span-2 border-sidebar-border dark:border-sidebar-border shadow-sm">
+                    <Card className={`col-span-1 ${currentUser.role === 'parent' && children.length > 0 ? 'lg:col-span-2' : 'lg:col-span-3'} border-sidebar-border dark:border-sidebar-border shadow-sm`}>
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div>
                                 <CardTitle>Actividad de Gastos</CardTitle>

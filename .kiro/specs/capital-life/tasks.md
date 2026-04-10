@@ -41,11 +41,11 @@
   - [x] 5.3 Registrar rutas `/children` en `routes/web.php` con middleware `auth`
   - [x] 5.4 Crear página `resources/js/pages/children/index.tsx` con listado de hijos y formulario de creación
   - [x] 5.5 Crear componente `ChildCard.tsx` con acciones de ver dashboard y eliminar
-
+1
 - [ ] 6. Dashboard del hijo (Req 6)
   - [x] 6.1 Extender `DashboardController` para aceptar un `child_id` opcional y retornar datos del hijo
   - [x] 6.2 Crear página `resources/js/pages/children/show.tsx` con el dashboard del hijo (reutiliza componentes del dashboard principal)
-  - [ ] 6.3 Adaptar `dashboard.tsx` para mostrar saldo disponible cuando el usuario es hijo
+  - [x] 6.3 Adaptar `dashboard.tsx` para mostrar saldo disponible cuando el usuario es hijo
 
 ---
 
@@ -55,8 +55,8 @@
   - [x] 7.1 Crear migración y modelo `ScheduleRestriction` con relación `belongsTo User (child)`
   - [x] 7.2 Crear `RestrictionController` con métodos para horario: `storeSchedule`, `updateSchedule`
   - [x] 7.3 Agregar validación de horario en `ExpenseController@store`: verificar si el hijo tiene restricción activa y si el momento actual está fuera del intervalo
-  - [ ] 7.4 Registrar rutas `/children/{child}/restrictions/schedule`
-  - [ ] 7.5 Crear UI en `resources/js/pages/restrictions/index.tsx` para configurar horarios (selector de días y horas)
+  - [x] 7.4 Registrar rutas `/children/{child}/restrictions/schedule`
+  - [x] 7.5 Crear UI en `resources/js/pages/restrictions/index.tsx` para configurar horarios (selector de días y horas)
 
 - [ ] 8. Restricciones de categoría (Req 8)
   - [ ] 8.1 Crear migración y modelo `CategoryRestriction` con relación `belongsTo User (child)`

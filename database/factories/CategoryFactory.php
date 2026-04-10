@@ -13,34 +13,34 @@ class CategoryFactory extends Factory
 {
     protected $model = Category::class;
 
+    public const CATEGORY_NAMES = [
+        'Groceries',
+        'Dining Out',
+        'Coffee & Snacks',
+        'Fuel & Vehicle Care',
+        'Public Transit & Rideshare',
+        'Rent or Mortgage',
+        'Utilities',
+        'Digital Services',
+        'Home Maintenance',
+        'Medical & Pharmacy',
+        'Fitness & Wellness',
+        'Personal Care',
+        'Subscriptions & Streaming',
+        'Social & Events',
+        'Clothing & Accessories',
+        'Hobbies',
+        'Education & Training',
+        'Books & Media',
+        'Debt & Interest',
+        'Gifts & Donations',
+    ];
+
     public function definition(): array
     {
-        $categories = [
-            'Groceries',
-            'Dining Out',
-            'Coffee & Snacks',
-            'Fuel & Vehicle Care',
-            'Public Transit & Rideshare',
-            'Rent or Mortgage',
-            'Utilities',
-            'Digital Services',
-            'Home Maintenance',
-            'Medical & Pharmacy',
-            'Fitness & Wellness',
-            'Personal Care',
-            'Subscriptions & Streaming',
-            'Social & Events',
-            'Clothing & Accessories',
-            'Hobbies',
-            'Education & Training',
-            'Books & Media',
-            'Debt & Interest',
-            'Gifts & Donations',
-        ];
-
         return [
             'user_id' => User::factory(),
-            'name' => fake()->randomElement($categories),
+            'name' => fake()->randomElement(self::CATEGORY_NAMES),
             'icon' => fake()->optional()->word(),
         ];
     }
