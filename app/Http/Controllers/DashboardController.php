@@ -49,9 +49,10 @@ class DashboardController extends Controller
 
         // Distribution by category for current month
         $expensesByCategory = $targetUser->expenses()
-            ->whereBetween('date', [$currentMonth->toDateString(), $currentMonthEnd->toDateString()])
-            ->selectRaw('category, SUM(amount) as total')
-            ->groupBy('category')
+            ->join('categories', 'expenses.category_id', '=', 'categories.id')
+            ->whereBetween('expenses.date', [$currentMonth->toDateString(), $currentMonthEnd->toDateString()])
+            ->selectRaw('categories.name as category, SUM(expenses.amount) as total')
+            ->groupBy('categories.id', 'categories.name')
             ->get()
             ->map(fn($item) => [
                 'category' => $item->category,
@@ -60,6 +61,7 @@ class DashboardController extends Controller
 
         // Last 5 expenses
         $recentExpenses = $targetUser->expenses()
+            ->with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
             ->limit(5)
