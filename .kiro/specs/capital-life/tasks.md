@@ -7,12 +7,12 @@
 ## Fase 1 — MVP Core (Horas 1-4)
 
 - [ ] 1. Extender modelo User y migración base
-  - [ ] 1.1 Crear migración para agregar columnas `role`, `parent_id`, `balance`, `phone` a la tabla `users`
-  - [ ] 1.2 Actualizar `User.php` con relaciones `children()`, `parent()`, scopes `isParent()`, `isChild()`, y atributo `balance`
+  - [x] 1.1 Crear migración para agregar columnas `role`, `parent_id`, `balance`, `phone` a la tabla `users`
+  - [x] 1.2 Actualizar `User.php` con relaciones `children()`, `parent()`, scopes `isParent()`, `isChild()`, y atributo `balance`
   - [ ] 1.3 Actualizar `UserFactory` para soportar creación de usuarios padre e hijo
 
 - [ ] 2. Módulo de gastos (Req 2)
-  - [ ] 2.1 Crear migración y modelo `Expense` con relación `belongsTo User`
+  - [x] 2.1 Crear migración y modelo `Expense` con relación `belongsTo User`
   - [ ] 2.2 Crear `ExpenseController` con métodos `index`, `store`, `update`, `destroy`
   - [ ] 2.3 Crear `ExpenseRequest` (FormRequest) con validaciones de monto, categoría y fecha
   - [ ] 2.4 Definir constante/enum `CATEGORIES` con las 8 categorías predefinidas

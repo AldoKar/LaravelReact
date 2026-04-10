@@ -39,6 +39,11 @@ class User extends Authenticatable
         return $this->hasMany(User::class, 'parent_id');
     }
 
+    public function expenses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+
     // Scopes
     public function scopeIsParent($query)
     {
