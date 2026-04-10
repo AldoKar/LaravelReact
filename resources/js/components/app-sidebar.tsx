@@ -13,7 +13,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { capitalFamily, dashboard } from '@/routes';
+import { capitalFamily, dashboard, travel } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -29,7 +29,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Capital Travel',
-        href: dashboard(),
+        href: travel(),
         icon: LayoutGrid,
     },
 ];
