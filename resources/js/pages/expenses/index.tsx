@@ -1,5 +1,7 @@
 import { Head, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Table,
   TableBody,
@@ -24,11 +26,19 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from '@/components/ui/resizable';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
 import { ExpenseFormDialog, type Expense } from '@/components/expenses/ExpenseForm';
 import { ExpenseCharts } from '@/components/expenses/ExpenseCharts';
 import { index as expensesIndex } from '@/routes/expenses';
-import { EditIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import { EditIcon, TrashIcon, FilterIcon, XIcon } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 interface ExpensesIndexProps {
   expenses: Expense[];
@@ -36,6 +46,10 @@ interface ExpensesIndexProps {
 
 export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
   const [deletingExpense, setDeletingExpense] = useState<number | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
 
   const handleDelete = (expenseId: number) => {
     router.delete(`/expenses/${expenseId}`, {
@@ -59,6 +73,39 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
     });
   };
 
+  // Get unique categories
+  const categories = useMemo(() => {
+    return Array.from(new Set(expenses.map((expense) => expense.category?.name).filter(Boolean)));
+  }, [expenses]);
+
+  // Filter expenses
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((expense) => {
+      // Category filter
+      if (categoryFilter !== 'all' && expense.category?.name !== categoryFilter) {
+        return false;
+      }
+
+      // Date range filter
+      if (startDate && expense.date < startDate) {
+        return false;
+      }
+      if (endDate && expense.date > endDate) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [expenses, categoryFilter, startDate, endDate]);
+
+  const clearFilters = () => {
+    setCategoryFilter('all');
+    setStartDate('');
+    setEndDate('');
+  };
+
+  const hasActiveFilters = categoryFilter !== 'all' || startDate !== '' || endDate !== '';
+
   return (
     <>
       <Head title="Gastos" />
@@ -70,8 +117,81 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
               Gestiona tus gastos registrados
             </p>
           </div>
-          <ExpenseFormDialog />
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              <FilterIcon className="h-4 w-4" />
+              Filtros
+              {hasActiveFilters && (
+                <span className="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
+                  {[categoryFilter !== 'all', startDate, endDate].filter(Boolean).length}
+                </span>
+              )}
+            </Button>
+            <ExpenseFormDialog />
+          </div>
         </div>
+
+        {/* Filters Panel */}
+        {showFilters && (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="category-filter">Categoría</Label>
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger id="category-filter">
+                      <SelectValue placeholder="Todas las categorías" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas las categorías</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="start-date">Fecha inicio</Label>
+                  <Input
+                    id="start-date"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="end-date">Fecha fin</Label>
+                  <Input
+                    id="end-date"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {hasActiveFilters && (
+                <div className="mt-4 flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    Mostrando {filteredExpenses.length} de {expenses.length} gastos
+                  </p>
+                  <Button variant="ghost" size="sm" onClick={clearFilters}>
+                    <XIcon className="h-4 w-4" />
+                    Limpiar filtros
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {expenses.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-xl border border-sidebar-border/70 p-12 dark:border-sidebar-border">
@@ -85,6 +205,21 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
               <ExpenseFormDialog />
             </div>
           </div>
+        ) : filteredExpenses.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-sidebar-border/70 p-12 dark:border-sidebar-border">
+            <p className="text-lg font-medium text-muted-foreground">
+              No hay gastos que coincidan con los filtros
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Intenta ajustar los filtros para ver más resultados
+            </p>
+            <div className="mt-6">
+              <Button variant="outline" onClick={clearFilters}>
+                <XIcon className="h-4 w-4" />
+                Limpiar filtros
+              </Button>
+            </div>
+          </div>
         ) : (
           <ResizablePanelGroup
             className="min-h-[800px] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
@@ -92,7 +227,7 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
             {/* ─── Charts Panel ──────────────────────────────────── */}
             <ResizablePanel defaultSize={50} minSize={25}>
               <div className="h-full overflow-y-auto p-4">
-                <ExpenseCharts expenses={expenses} />
+                <ExpenseCharts expenses={filteredExpenses} />
               </div>
             </ResizablePanel>
 
@@ -112,7 +247,7 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {expenses.map((expense) => (
+                    {filteredExpenses.map((expense) => (
                       <TableRow key={expense.id}>
                         <TableCell className="font-medium">
                           {formatDate(expense.date)}
