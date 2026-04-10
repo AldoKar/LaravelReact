@@ -15,6 +15,8 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { dashboard } from '@/routes';
 import { ExpenseFormDialog } from '@/components/expenses';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { WalletIcon, UsersIcon, CircleDollarSign } from 'lucide-react';
 
 Chart.register(
     CategoryScale,
@@ -37,6 +39,22 @@ type ExpenseSummaryItem = {
     total: number;
 };
 
+// ============================================================================
+// MOCK DATA: SIMULANDO DATOS QUE VENDRÍAN DE SUPABASE
+// ============================================================================
+const MOCK_SUPABASE_DATA = {
+    // Mi dinero / Sueldo / Monto
+    cuentaPrincipal: {
+        montoDisponible: 3450.50,
+    },
+    // Mis Hijos
+    hijos: [
+        { id: 1, nombre: 'Ana', monto: 120.00, avatar: 'A' },
+        { id: 2, nombre: 'Leo', monto: 45.50, avatar: 'L' },
+        { id: 3, nombre: 'Sofía', monto: 300.00, avatar: 'S' },
+    ]
+};
+
 export default function Dashboard() {
     const [selectedPeriod, setSelectedPeriod] = useState<ExpensePeriod>('day');
     const [summary, setSummary] = useState<ExpenseSummaryItem[]>([]);
@@ -44,6 +62,9 @@ export default function Dashboard() {
     const [error, setError] = useState<string | null>(null);
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
+
+    // Simulated Supabase fetch state
+    const [supabaseData] = useState(MOCK_SUPABASE_DATA);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -132,101 +153,145 @@ export default function Dashboard() {
         };
     }, [summary]);
 
-    const totalExpenses = summary.reduce((carry, item) => carry + item.total, 0);
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('es-US', {
+            style: 'currency',
+            currency: 'USD',
+        }).format(amount);
+    };
 
     return (
         <>
-            <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <Head title="Dashboard Principal" />
+            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-4 md:p-8">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-semibold">Dashboard</h1>
-                    <ExpenseFormDialog />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 rounded-xl border border-sidebar-border/70 p-3 dark:border-sidebar-border">
-                    {(['day', 'week', 'month'] as ExpensePeriod[]).map((period) => (
-                        <button
-                            key={period}
-                            type="button"
-                            onClick={() => setSelectedPeriod(period)}
-                            className={`rounded-full px-4 py-2 text-sm font-medium transition ${selectedPeriod === period
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                                }`}
-                        >
-                            {period === 'day' && 'Día'}
-                            {period === 'week' && 'Semana'}
-                            {period === 'month' && 'Mes'}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                    <div className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                        <p className="text-sm text-muted-foreground">
-                            Total de gastos
-                        </p>
-                        <p className="mt-2 text-2xl font-semibold">
-                            {loading ? 'Cargando...' : `$${totalExpenses.toFixed(2)}`}
-                        </p>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            Vista por {selectedPeriod === 'day' ? 'día' : selectedPeriod === 'week' ? 'semana' : 'mes'}
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">Finanzas de la Familia</h1>
+                        <p className="text-muted-foreground mt-1">
+                            Resumen de tus cuentas y las de tus hijos.
                         </p>
                     </div>
-                    <div className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                        <p className="text-sm text-muted-foreground">Periodo seleccionado</p>
-                        <p className="mt-2 text-2xl font-semibold capitalize">{selectedPeriod}</p>
-                    </div>
-                    <div className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                        <p className="text-sm text-muted-foreground">Puntos en el gráfico</p>
-                        <p className="mt-2 text-2xl font-semibold">{summary.length}</p>
-                    </div>
                 </div>
 
-                {error ? (
-                    <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
-                        {error}
-                    </div>
-                ) : null}
+                {/* ─── TARJETAS DE RESUMEN (SUPABASE DATA) ───────────────────── */}
+                <div className="grid gap-4 md:grid-cols-2">
+                    {/* Mi Dinero / Monto Disponible */}
+                    <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">
+                                Dinero Disponible
+                            </CardTitle>
+                            <WalletIcon className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-primary">
+                                {formatCurrency(supabaseData.cuentaPrincipal.montoDisponible)}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Saldo actual en tu cuenta
+                            </p>
+                        </CardContent>
+                    </Card>
 
-                <div className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                    <div className="flex items-center justify-between gap-3">
-                        <h2 className="text-base font-semibold">
-                            Gastos totales por {selectedPeriod === 'day' ? 'día' : selectedPeriod === 'week' ? 'semana' : 'mes'}
-                        </h2>
-                        <span className="text-sm text-muted-foreground">
-                            Últimos 10 periodos
-                        </span>
-                    </div>
-                    <div className="mt-4 h-96">
-                        <canvas ref={chartRef} />
-                    </div>
+
+                    {/* Conteo de Hijos */}
+                    <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">
+                                Mis Hijos
+                            </CardTitle>
+                            <UsersIcon className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">
+                                {supabaseData.hijos.length}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Cuentas de menores vinculadas
+                            </p>
+                        </CardContent>
+                    </Card>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-2">
-                    <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                        <h2 className="text-base font-semibold">
-                            Resumen actual
-                        </h2>
-                        <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                            {summary.slice(-5).map((item) => (
-                                <div key={item.key} className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2">
-                                    <span>{item.label}</span>
-                                    <span className="font-medium text-foreground">${item.total.toFixed(2)}</span>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    
+                    {/* ─── LISTA DE ALUMNOS / HIJOS ────────────────────────────── */}
+                    <Card className="col-span-1 border-sidebar-border dark:border-sidebar-border shadow-sm flex flex-col">
+                        <CardHeader>
+                            <CardTitle>Cuentas de los Hijos</CardTitle>
+                            <CardDescription>
+                                Balances actuales de tus hijos.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex-1">
+                            <div className="space-y-6">
+                                {supabaseData.hijos.map((hijo) => (
+                                    <div key={hijo.id} className="flex items-center">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
+                                            {hijo.avatar}
+                                        </div>
+                                        <div className="ml-4 space-y-1">
+                                            <p className="text-sm font-medium leading-none">{hijo.nombre}</p>
+                                            <p className="text-sm text-muted-foreground">
+                                                Cuenta vinculada
+                                            </p>
+                                        </div>
+                                        <div className="ml-auto font-medium text-emerald-600 dark:text-emerald-400">
+                                            {formatCurrency(hijo.monto)}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* ─── GRÁFICO DE GASTOS ORIGINAL ──────────────────────────── */}
+                    <Card className="col-span-1 lg:col-span-2 border-sidebar-border dark:border-sidebar-border shadow-sm">
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <div>
+                                <CardTitle>Actividad de Gastos</CardTitle>
+                                <CardDescription>Tus gastos en la plataforma</CardDescription>
+                            </div>
+                            <ExpenseFormDialog />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                                {(['day', 'week', 'month'] as ExpensePeriod[]).map((period) => (
+                                    <button
+                                        key={period}
+                                        type="button"
+                                        onClick={() => setSelectedPeriod(period)}
+                                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${selectedPeriod === period
+                                            ? 'bg-primary text-primary-foreground'
+                                            : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                                            }`}
+                                    >
+                                        {period === 'day' && 'Día'}
+                                        {period === 'week' && 'Semana'}
+                                        {period === 'month' && 'Mes'}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {error ? (
+                                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 mb-4">
+                                    {error}
                                 </div>
-                            ))}
-                        </div>
-                    </section>
+                            ) : null}
 
-                    <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
-                        <h2 className="text-base font-semibold">Estado</h2>
-                        <div className="mt-4 space-y-3 text-sm text-muted-foreground">
-                            <p>Los datos vienen desde <code>/expenses/summary</code> usando la función nueva del backend.</p>
-                            <p>El botón cambia entre vista por día, semana y mes sin salir del dashboard.</p>
-                            <p>Si quieres, luego puedo conectar este mismo endpoint a filtros más avanzados o a cards separadas por categoría.</p>
-                        </div>
-                    </section>
+                            <div className="h-[250px] w-full">
+                                {loading ? (
+                                    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                                        Cargando gráfica...
+                                    </div>
+                                ) : (
+                                    <canvas ref={chartRef} />
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
+
             </div>
         </>
     );
@@ -235,7 +300,7 @@ export default function Dashboard() {
 Dashboard.layout = {
     breadcrumbs: [
         {
-            title: 'Dashboard',
+            title: 'Dashboard Principal',
             href: dashboard(),
         },
     ],
