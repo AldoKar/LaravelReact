@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChildController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -31,5 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+
+// Webhook Routes (Exempt from CSRF in bootstrap/app.php)
+Route::get('webhook/whatsapp', [WhatsAppWebhookController::class, 'verify']);
+Route::post('webhook/whatsapp', [WhatsAppWebhookController::class, 'handle']);
 
 // hola
