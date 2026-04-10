@@ -12,7 +12,9 @@ import { store } from '@/routes/register';
 export default function Register() {
     return (
         <>
-            <Head title="Register" />
+            <Head title="Create Account — Capital LIfe">
+                <meta name="description" content="Create your Capital LIfe account to start banking with no fees, great rewards, and modern tools." />
+            </Head>
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
@@ -21,9 +23,9 @@ export default function Register() {
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Full name</Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -32,7 +34,7 @@ export default function Register() {
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
-                                    placeholder="Full name"
+                                    placeholder="John Doe"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -49,7 +51,7 @@ export default function Register() {
                                     tabIndex={2}
                                     autoComplete="email"
                                     name="email"
-                                    placeholder="email@example.com"
+                                    placeholder="you@example.com"
                                 />
                                 <InputError message={errors.email} />
                             </div>
@@ -62,7 +64,7 @@ export default function Register() {
                                     tabIndex={3}
                                     autoComplete="new-password"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="Create a password"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -77,7 +79,7 @@ export default function Register() {
                                     tabIndex={4}
                                     autoComplete="new-password"
                                     name="password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder="Confirm your password"
                                 />
                                 <InputError
                                     message={errors.password_confirmation}
@@ -91,14 +93,14 @@ export default function Register() {
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                Create account
+                                Create Account
                             </Button>
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
+                        <div className="text-center text-sm" style={{ color: '#6B7B8D' }}>
                             Already have an account?{' '}
                             <TextLink href={login()} tabIndex={6}>
-                                Log in
+                                Sign in
                             </TextLink>
                         </div>
                     </>
@@ -109,6 +111,6 @@ export default function Register() {
 }
 
 Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
+    title: 'Create your account',
+    description: 'Start banking with Capital LIfe in minutes',
 };
