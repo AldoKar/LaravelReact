@@ -244,7 +244,7 @@ class MissionController extends Controller
         ]);
 
         $mission->update([
-            'status' => 'activa',
+            'status' => 'rechazada',
             'reject_reason' => $validated['reject_reason'] ?? null,
         ]);
 
