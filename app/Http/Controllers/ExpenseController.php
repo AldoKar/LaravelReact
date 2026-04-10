@@ -20,15 +20,36 @@ class ExpenseController extends Controller
         $validated = $request->validate([
             'period' => ['nullable', 'in:day,week,month'],
             'periods' => ['nullable', 'integer', 'min:1', 'max:120'],
+            'child_id' => ['nullable', 'integer', 'exists:users,id'],
         ]);
 
         $period = $validated['period'] ?? 'day';
         $periods = $validated['periods'] ?? 10;
+        $childId = $validated['child_id'] ?? null;
+
+        // Determine which user's expenses to summarize
+        if ($childId) {
+            // Ensure the authenticated user is a parent
+            if (!$request->user()->isParent()) {
+                abort(403, 'No autorizado');
+            }
+
+            // Find the child and ensure it belongs to the authenticated parent
+            $child = \App\Models\User::find($childId);
+
+            if (!$child || $child->parent_id !== $request->user()->id) {
+                abort(404, 'Cuenta hijo no encontrada');
+            }
+
+            $targetUser = $child;
+        } else {
+            $targetUser = $request->user();
+        }
 
         return response()->json([
             'period' => $period,
             'periods' => $periods,
-            'data' => $request->user()->summedExpenses($period, $periods),
+            'data' => $targetUser->summedExpenses($period, $periods),
         ]);
     }
 

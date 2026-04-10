@@ -33,6 +33,38 @@ class ChildController extends Controller
     }
 
     /**
+     * Display the dashboard for a specific child.
+     */
+    public function show(Request $request, User $child): Response
+    {
+        $user = $request->user();
+
+        // Ensure only parents can access this
+        if (!$user->isParent()) {
+            abort(403, 'No autorizado');
+        }
+
+        // Ensure the child belongs to this parent
+        if ($child->parent_id !== $user->id) {
+            abort(403, 'No autorizado');
+        }
+
+        // Ensure the user being viewed is actually a child
+        if (!$child->isChild()) {
+            abort(403, 'No autorizado');
+        }
+
+        return Inertia::render('children/show', [
+            'targetUser' => [
+                'id' => $child->id,
+                'name' => $child->name,
+                'balance' => (float) $child->balance,
+                'role' => $child->role,
+            ],
+        ]);
+    }
+
+    /**
      * Store a newly created child account in storage.
      */
     public function store(ChildRequest $request): RedirectResponse

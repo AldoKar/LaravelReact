@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChildController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -11,7 +12,7 @@ Route::inertia('/', 'welcome', [
 ])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::inertia('capital-family', 'capital-family')->name('capital-family');
     Route::inertia('travel', 'travel')->name('travel');
 
@@ -25,7 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Children routes
     Route::resource('children', ChildController::class)->only([
-        'index', 'store', 'destroy'
+        'index', 'show', 'store', 'destroy'
     ]);
 });
 
