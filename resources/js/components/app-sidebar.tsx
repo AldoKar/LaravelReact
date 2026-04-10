@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Receipt, Users } from 'lucide-react';
+import { LayoutGrid, Receipt, Users, Trophy } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -32,6 +32,11 @@ const mainNavItems: NavItem[] = [
         title: 'Cuentas Hijo',
         href: children(),
         icon: Users,
+    },
+    {
+        title: 'Misiones',
+        href: '/missions',
+        icon: Trophy,
     },
     {
         title: 'Capital Family',

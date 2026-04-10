@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChildController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\MissionController;
 use App\Http\Controllers\RestrictionController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('children.restrictions.category.store');
     Route::delete('children/{child}/restrictions/category/{restriction}', [RestrictionController::class, 'destroyCategory'])
         ->name('children.restrictions.category.destroy');
+
+    // Mission routes
+    Route::get('missions', [MissionController::class, 'index'])->name('missions.index');
+    Route::post('missions', [MissionController::class, 'store'])->name('missions.store');
+    Route::post('missions/{mission}/complete', [MissionController::class, 'complete'])->name('missions.complete');
+    Route::post('missions/{mission}/approve', [MissionController::class, 'approve'])->name('missions.approve');
+    Route::post('missions/{mission}/reject', [MissionController::class, 'reject'])->name('missions.reject');
 });
 
 require __DIR__.'/settings.php';
