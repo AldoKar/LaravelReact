@@ -260,8 +260,8 @@ const landingStyles = `
 
 .stat-number {
   font-size: 2.75rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-weight: 300;
+  letter-spacing: -0.03em;
   line-height: 1;
   background: linear-gradient(135deg, var(--co-blue), var(--co-blue-light));
   -webkit-background-clip: text;
@@ -478,20 +478,31 @@ const landingStyles = `
   background: linear-gradient(180deg, var(--co-red), var(--co-red-dark));
 }
 
+/* Eyebrow label */
+.eyebrow-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--co-blue);
+  margin-bottom: 1.25rem;
+}
+
 /* Section title */
 .section-title {
   font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--co-gray-900);
 }
 
 .section-subtitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: var(--co-gray-500);
   line-height: 1.7;
   max-width: 600px;
+  font-weight: 400;
 }
 
 @media (max-width: 768px) {
@@ -562,7 +573,7 @@ function CapitalOneLogo({ scrolled }: { scrolled: boolean }) {
                 className="nav-logo-text"
                 style={{
                     fontSize: '1.25rem',
-                    fontWeight: 800,
+                    fontWeight: 500,
                     letterSpacing: '-0.03em',
                     color: scrolled ? '#004977' : 'white',
                     transition: 'color 0.3s ease',
@@ -704,20 +715,9 @@ export default function Welcome({
                                     Dashboard
                                 </Link>
                             ) : (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                    <Link
-                                        href={login()}
-                                        className="nav-link"
-                                        style={{ fontWeight: 600 }}
-                                    >
-                                        Sign In
-                                    </Link>
-                                    {canRegister && (
-                                        <Link href={register()} className="btn-primary" style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem' }}>
-                                            Get Started
-                                        </Link>
-                                    )}
-                                </div>
+                                <Link href={login()} className="btn-primary" style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem' }}>
+                                    Sign In
+                                </Link>
                             )}
                         </div>
 
@@ -790,13 +790,14 @@ export default function Welcome({
                     >
                         {/* Left content */}
                         <div style={{ flex: '1 1 480px', minWidth: '280px' }}>
+
                             <h1
                                 style={{
-                                    fontSize: 'clamp(2.25rem, 5vw, 3.5rem)',
-                                    fontWeight: 700,
+                                    fontSize: 'clamp(2.25rem, 5vw, 3.25rem)',
+                                    fontWeight: 300,
                                     color: 'white',
-                                    lineHeight: 1.1,
-                                    letterSpacing: '-0.03em',
+                                    lineHeight: 1.2,
+                                    letterSpacing: '-0.02em',
                                     marginBottom: '1.5rem',
                                 }}
                             >
@@ -838,37 +839,19 @@ export default function Welcome({
                             </div>
                         </div>
 
-                        {/* Right - Card mockup */}
-                        <div style={{ flex: '1 1 380px', display: 'flex', justifyContent: 'center', minWidth: '280px' }}>
-                            <div className="hero-card-mock">
-                                <div className="mock-label" style={{ marginBottom: '0.5rem' }}>Portfolio Value</div>
-                                <div className="mock-balance" style={{ marginBottom: '2rem' }}>$124,850</div>
-
-                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '120px', marginBottom: '1.5rem' }}>
-                                    {[45, 62, 38, 78, 55, 90, 72, 85, 68, 95, 82, 70].map((h, i) => (
-                                        <div
-                                            key={i}
-                                            className={`mock-chart-bar ${i === 9 ? 'red' : ''}`}
-                                            style={{
-                                                flex: 1,
-                                                height: `${h}%`,
-                                                opacity: 0.7 + (i * 0.025),
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>Quarter Performance</div>
-                                        <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#4ADE80' }}>+$12,340</div>
-                                    </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#4ADE80', fontSize: '0.8125rem', fontWeight: 600 }}>
-                                        <TrendingUp size={14} />
-                                        <span>+12.5%</span>
-                                    </div>
-                                </div>
-                            </div>
+                        {/* Right - Image */}
+                        <div style={{ flex: '1 1 420px', display: 'flex', justifyContent: 'center', minWidth: '280px' }}>
+                            <img
+                                src="/CapitalOnePicture.avif"
+                                alt="Capital LIfe"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '500px',
+                                    borderRadius: '16px',
+                                    boxShadow: '0 24px 64px rgba(0, 0, 0, 0.3)',
+                                    objectFit: 'cover',
+                                }}
+                            />
                         </div>
                     </div>
                 </section>
@@ -885,7 +868,7 @@ export default function Welcome({
                             style={{ textAlign: 'center', marginBottom: '4rem' }}
                             className={`fade-in-up ${features.isVisible ? 'visible' : ''}`}
                         >
-                            <div className="accent-line" style={{ margin: '0 auto 1.5rem' }} />
+                            <p className="eyebrow-label">Our Solutions</p>
                             <h2 className="section-title">
                                 Comprehensive Financial
                                 <br />
@@ -918,10 +901,10 @@ export default function Welcome({
                                     <h3
                                         style={{
                                             fontSize: '1.125rem',
-                                            fontWeight: 700,
+                                            fontWeight: 600,
                                             color: '#1A2332',
                                             marginBottom: '0.75rem',
-                                            letterSpacing: '-0.02em',
+                                            letterSpacing: '-0.01em',
                                         }}
                                     >
                                         {f.title}
@@ -969,7 +952,7 @@ export default function Welcome({
                             style={{ textAlign: 'center', marginBottom: '3rem' }}
                             className={`fade-in-up ${stats.isVisible ? 'visible' : ''}`}
                         >
-                            <div className="accent-line" style={{ margin: '0 auto 1.5rem' }} />
+                            <p className="eyebrow-label">Performance</p>
                             <h2 className="section-title">
                                 Proven Results,
                                 <br />
@@ -1017,13 +1000,25 @@ export default function Welcome({
                         }}
                         className={`fade-in-up ${cta.isVisible ? 'visible' : ''}`}
                     >
+                        <p
+                            style={{
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                letterSpacing: '0.12em',
+                                textTransform: 'uppercase',
+                                color: 'rgba(255,255,255,0.45)',
+                                marginBottom: '1.25rem',
+                            }}
+                        >
+                            Get Started Today
+                        </p>
                         <h2
                             style={{
-                                fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
-                                fontWeight: 800,
+                                fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                                fontWeight: 300,
                                 color: 'white',
-                                letterSpacing: '-0.03em',
-                                lineHeight: 1.15,
+                                letterSpacing: '-0.02em',
+                                lineHeight: 1.2,
                                 marginBottom: '1.25rem',
                             }}
                         >
