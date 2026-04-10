@@ -8,6 +8,8 @@ use App\Ai\Tools\GetExpenseHistoryTool;
 use App\Ai\Tools\CheckChildrenExpensesTool;
 use App\Ai\Tools\RegisterChildExpenseTool;
 use App\Ai\Tools\GetChildExpenseHistoryTool;
+use App\Ai\Tools\CreateMissionTool;
+use App\Ai\Tools\CompleteMissionTool;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Contracts\HasTools;
@@ -41,7 +43,9 @@ class WhatsAppExpenseAgent implements Agent, Conversational, HasTools
              . "3) Si pide ver los saldos actuales de sus hijos, usa CheckChildrenExpensesTool. "
              . "4) Si te pide registrar un gasto para alguno de sus hijos, usa RegisterChildExpenseTool. "
              . "5) Si te pregunta en qué ha gastado su hijo o el desglose, usa GetChildExpenseHistoryTool. "
-             . "Clasifica automáticamente el gasto en una categoría. Confírmale el gasto y su saldo restante (o el de su hijo). Tu texto siempre será visualizado de excelente manera en un chat de WhatsApp con formato markdown.";
+             . "6) Si quiere asignarle una TAREA o MISIÓN a su hijo con una recompensa económica, usa CreateMissionTool. "
+             . "7) Si dice que su hijo ya hizo la tarea o te pide pagarla/completarla, usa CompleteMissionTool. "
+             . "Clasifica automáticamente el gasto en una categoría. Confírmale el resultado a su petición. Tu texto siempre será visualizado de excelente manera en un chat de WhatsApp con formato markdown.";
     }
 
     /**
@@ -67,6 +71,8 @@ class WhatsAppExpenseAgent implements Agent, Conversational, HasTools
             new CheckChildrenExpensesTool($this->user),
             new RegisterChildExpenseTool($this->user),
             new GetChildExpenseHistoryTool($this->user),
+            new CreateMissionTool($this->user),
+            new CompleteMissionTool($this->user),
         ];
     }
 }
