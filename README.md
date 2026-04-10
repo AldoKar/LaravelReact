@@ -75,6 +75,12 @@ tests/
 
 ## 4. Modelo de Datos y Relaciones
 
+### Estructura de Base de Datos
+
+Diagrama relacional actual del proyecto:
+
+![Estructura de Base de Datos](./image.png)
+
 ### User
 - Campos clave: `role`, `parent_id`, `balance`, `phone`.
 - Roles: `parent | child`.
