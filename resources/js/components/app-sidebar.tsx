@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { LayoutGrid, Receipt, Users, Trophy } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
@@ -52,6 +52,18 @@ const mainNavItems: NavItem[] = [
 
 
 export function AppSidebar() {
+    const { auth } = usePage().props as {
+        auth: { user?: { role?: string } | null };
+    };
+
+    const mainNavItems = mainNavItemsBase.filter((item) => {
+        if (item.title === 'Cuentas Hijo' && auth.user?.role === 'child') {
+            return false;
+        }
+
+        return true;
+    });
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -76,3 +88,36 @@ export function AppSidebar() {
         </Sidebar>
     );
 }
+
+const mainNavItemsBase: NavItem[] = [
+    {
+        title: 'Dashboard',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Gastos',
+        href: expenses(),
+        icon: Receipt,
+    },
+    {
+        title: 'Cuentas Hijo',
+        href: children(),
+        icon: Users,
+    },
+    {
+        title: 'Misiones',
+        href: '/missions',
+        icon: Trophy,
+    },
+    {
+        title: 'Capital Family',
+        href: capitalFamily(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Capital Travel',
+        href: travel(),
+        icon: LayoutGrid,
+    },
+];
