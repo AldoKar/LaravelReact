@@ -53,6 +53,16 @@ class User extends Authenticatable
         return $this->hasMany(Category::class);
     }
 
+    public function createdMissions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Mission::class, 'parent_id');
+    }
+
+    public function assignedMissions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Mission::class, 'child_id');
+    }
+
     /**
      * Return summed expenses for the last N periods.
      *
