@@ -13,10 +13,10 @@
 
 - [ ] 2. Módulo de gastos (Req 2)
   - [x] 2.1 Crear migración y modelo `Expense` con relación `belongsTo User`
-  - [ ] 2.2 Crear `ExpenseController` con métodos `index`, `store`, `update`, `destroy`
-  - [ ] 2.3 Crear `ExpenseRequest` (FormRequest) con validaciones de monto, categoría y fecha
+  - [x] 2.2 Crear `ExpenseController` con métodos `index`, `store`, `update`, `destroy`
+  - [x] 2.3 Crear `ExpenseRequest` (FormRequest) con validaciones de monto, categoría y fecha
   - [ ] 2.4 Definir constante/enum `CATEGORIES` con las 8 categorías predefinidas
-  - [ ] 2.5 Registrar rutas resource `/expenses` en `routes/web.php`
+  - [x] 2.5 Registrar rutas resource `/expenses` en `routes/web.php`
   - [ ] 2.6 Crear página React `resources/js/pages/expenses/index.tsx` con listado y botón de crear/editar/eliminar
   - [ ] 2.7 Crear componente `ExpenseForm.tsx` reutilizable (crear y editar)
 
