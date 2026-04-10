@@ -14,26 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::query()->firstOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => 'password',
-            ]
-        );
-
-        $user->update([
-            'name' => 'Test User',
-            'password' => 'password',
-        ]);
-
-        $user->expenses()->delete();
-        $user->categories()->delete();
-        $user->ensureDefaultCategories();
-
-        Expense::factory()
-            ->count(20)
-            ->for($user)
-            ->create();
+        // Run demo seeder for hackathon
+        $this->call(DemoSeeder::class);
     }
 }
