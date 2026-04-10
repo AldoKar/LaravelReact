@@ -19,6 +19,7 @@ import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ExpenseCharts } from '@/components/expenses/ExpenseCharts';
+import { GiveMoneyDialog } from '@/components/children';
 
 Chart.register(
     CategoryScale,
@@ -189,6 +190,7 @@ export default function ChildShow({ targetUser, expenses }: ChildShowProps) {
                             </p>
                         </div>
                     </div>
+                    <GiveMoneyDialog child={targetUser} />
                 </div>
 
                 <Tabs value={activeTab} className="w-full">

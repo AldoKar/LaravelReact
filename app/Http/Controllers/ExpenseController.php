@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenseRequest;
+use App\Models\CategoryRestriction;
 use App\Models\Expense;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -105,11 +108,50 @@ class ExpenseController extends Controller
                 }
             }
             
-            // TODO: Implement category restriction validation (Requirement 8)
+            // Check category restriction (Requirement 8)
+            $categoryRestriction = CategoryRestriction::where('child_id', $user->id)
+                ->where('category_id', $validated['category_id'])
+                ->first();
+            
+            if ($categoryRestriction) {
+                // Check if category is blocked
+                if ($categoryRestriction->type === 'blocked') {
+                    return back()->withErrors([
+                        'category_id' => 'Tu padre ha bloqueado esta categoría'
+                    ]);
+                }
+                
+                // Check if monthly limit is reached
+                if ($categoryRestriction->type === 'limited') {
+                    $startOfMonth = now()->startOfMonth();
+                    $endOfMonth = now()->endOfMonth();
+                    
+                    $totalSpentThisMonth = Expense::where('user_id', $user->id)
+                        ->where('category_id', $validated['category_id'])
+                        ->whereBetween('date', [$startOfMonth, $endOfMonth])
+                        ->sum('amount');
+                    
+                    $newTotal = $totalSpentThisMonth + $validated['amount'];
+                    
+                    if ($newTotal > $categoryRestriction->monthly_limit) {
+                        return back()->withErrors([
+                            'category_id' => 'Has alcanzado el límite mensual para esta categoría'
+                        ]);
+                    }
+                }
+            }
         }
 
-        // Create the expense
-        $user->expenses()->create($validated);
+        DB::transaction(function () use ($user, $validated): void {
+            $lockedUser = User::query()
+                ->whereKey($user->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            // Create the expense and reduce the available balance in the same transaction.
+            $lockedUser->expenses()->create($validated);
+            $lockedUser->decrement('balance', $validated['amount']);
+        });
 
         return back()->with('success', 'Gasto registrado exitosamente');
     }
@@ -126,7 +168,22 @@ class ExpenseController extends Controller
 
         $validated = $request->validated();
 
-        $expense->update($validated);
+        DB::transaction(function () use ($request, $expense, $validated): void {
+            $lockedExpense = Expense::query()
+                ->whereKey($expense->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedUser = User::query()
+                ->whereKey($request->user()->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $originalAmount = (float) $lockedExpense->amount;
+
+            $lockedExpense->update($validated);
+            $lockedUser->increment('balance', $originalAmount - (float) $validated['amount']);
+        });
 
         return back()->with('success', 'Gasto actualizado exitosamente');
     }
@@ -141,7 +198,20 @@ class ExpenseController extends Controller
             abort(403, 'No autorizado');
         }
 
-        $expense->delete();
+        DB::transaction(function () use ($request, $expense): void {
+            $lockedExpense = Expense::query()
+                ->whereKey($expense->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedUser = User::query()
+                ->whereKey($request->user()->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedUser->increment('balance', $lockedExpense->amount);
+            $lockedExpense->delete();
+        });
 
         return back()->with('success', 'Gasto eliminado exitosamente');
     }

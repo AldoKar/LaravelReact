@@ -34,6 +34,7 @@ class CategoryFactory extends Factory
         'Books & Media',
         'Debt & Interest',
         'Gifts & Donations',
+        'Family',
     ];
 
     public function definition(): array

@@ -58,13 +58,13 @@
   - [x] 7.4 Registrar rutas `/children/{child}/restrictions/schedule`
   - [x] 7.5 Crear UI en `resources/js/pages/restrictions/index.tsx` para configurar horarios (selector de días y horas)
 
-- [ ] 8. Restricciones de categoría (Req 8)
-  - [ ] 8.1 Crear migración y modelo `CategoryRestriction` con relación `belongsTo User (child)`
-  - [ ] 8.2 Agregar métodos `storeCategory`, `destroyCategory` en `RestrictionController`
-  - [ ] 8.3 Agregar validación de categoría en `ExpenseController@store`: verificar si la categoría está bloqueada o si se alcanzó el límite mensual
-  - [ ] 8.4 Registrar rutas `/children/{child}/restrictions/category`
-  - [ ] 8.5 Extender UI de restricciones para gestionar categorías bloqueadas y límites
-  - [ ] 8.6 Mostrar categorías bloqueadas y límites activos en el dashboard del hijo
+- [x] 8. Restricciones de categoría (Req 8)
+  - [x] 8.1 Crear migración y modelo `CategoryRestriction` con relación `belongsTo User (child)`
+  - [x] 8.2 Agregar métodos `storeCategory`, `destroyCategory` en `RestrictionController`
+  - [x] 8.3 Agregar validación de categoría en `ExpenseController@store`: verificar si la categoría está bloqueada o si se alcanzó el límite mensual
+  - [x] 8.4 Registrar rutas `/children/{child}/restrictions/category`
+  - [x] 8.5 Extender UI de restricciones para gestionar categorías bloqueadas y límites
+  - [x] 8.6 Mostrar categorías bloqueadas y límites activos en el dashboard del hijo
 
 ---
 
@@ -78,14 +78,14 @@
   - [ ] 9.5 Registrar rutas `/money-requests` con acciones de aprobar/rechazar
   - [ ] 9.6 Crear página `resources/js/pages/money-requests/index.tsx` con vistas diferenciadas para padre e hijo
 
-- [ ] 10. Misiones y recompensas (Req 10)
-  - [ ] 10.1 Crear migración y modelo `Mission` con relaciones a padre e hijo
-  - [ ] 10.2 Crear `MissionController` con métodos `store` (padre), `complete` (hijo), `approve` (padre), `reject` (padre)
-  - [ ] 10.3 Implementar lógica de aprobación: `DB::transaction` que actualiza estado y suma recompensa al `balance` del hijo
-  - [ ] 10.4 Agregar advertencia al crear misión si la recompensa supera el saldo del padre
-  - [ ] 10.5 Registrar rutas `/missions` con todas las acciones
-  - [ ] 10.6 Crear página `resources/js/pages/missions/index.tsx` con vistas para padre (crear, aprobar) e hijo (ver activas, marcar completada, historial)
-  - [ ] 10.7 Crear componente `MissionCard.tsx` con estado visual y acciones contextuales
+- [x] 10. Misiones y recompensas (Req 10)
+  - [x] 10.1 Crear migración y modelo `Mission` con relaciones a padre e hijo
+  - [x] 10.2 Crear `MissionController` con métodos `store` (padre), `complete` (hijo), `approve` (padre), `reject` (padre)
+  - [x] 10.3 Implementar lógica de aprobación: `DB::transaction` que actualiza estado y suma recompensa al `balance` del hijo
+  - [x] 10.4 Agregar advertencia al crear misión si la recompensa supera el saldo del padre
+  - [x] 10.5 Registrar rutas `/missions` con todas las acciones
+  - [x] 10.6 Crear página `resources/js/pages/missions/index.tsx` con vistas para padre (crear, aprobar) e hijo (ver activas, marcar completada, historial)
+  - [x] 10.7 Crear componente `MissionCard.tsx` con estado visual y acciones contextuales
 
 ---
 

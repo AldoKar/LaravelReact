@@ -53,13 +53,27 @@ type Child = {
     avatar: string;
 };
 
+type Category = {
+    id: number;
+    name: string;
+};
+
+type CategoryRestriction = {
+    id: number;
+    category: Category;
+    type: 'blocked' | 'limited';
+    monthly_limit: number | null;
+};
+
 type DashboardProps = {
     currentUser: CurrentUser;
     children: Child[];
+    categoryRestrictions: CategoryRestriction[];
 };
 
-export default function Dashboard({ currentUser, children }: DashboardProps) {
+export default function Dashboard({ currentUser, children, categoryRestrictions }: DashboardProps) {
     const [selectedPeriod, setSelectedPeriod] = useState<ExpensePeriod>('day');
+    const [summaryRefreshToken, setSummaryRefreshToken] = useState(0);
     const [summary, setSummary] = useState<ExpenseSummaryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -106,7 +120,7 @@ export default function Dashboard({ currentUser, children }: DashboardProps) {
         void loadSummary();
 
         return () => controller.abort();
-    }, [selectedPeriod]);
+    }, [selectedPeriod, summaryRefreshToken]);
 
     useEffect(() => {
         if (!chartRef.current) {
@@ -236,8 +250,48 @@ export default function Dashboard({ currentUser, children }: DashboardProps) {
                     )}
                 </div>
 
+                {/* ─── CATEGORY RESTRICTIONS FOR CHILD USERS ───────────────────── */}
+                {currentUser.role === 'child' && categoryRestrictions.length > 0 && (
+                    <Card className="border-sidebar-border dark:border-sidebar-border shadow-sm">
+                        <CardHeader>
+                            <CardTitle>Restricciones Activas</CardTitle>
+                            <CardDescription>
+                                Categorías con límites o bloqueos configurados por tu padre
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                {categoryRestrictions.map((restriction) => (
+                                    <div
+                                        key={restriction.id}
+                                        className="flex items-center justify-between rounded-lg border p-3"
+                                    >
+                                        <div className="flex-1">
+                                            <p className="font-medium">{restriction.category.name}</p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {restriction.type === 'blocked'
+                                                    ? 'Bloqueada - No puedes registrar gastos'
+                                                    : `Límite mensual: ${formatCurrency(restriction.monthly_limit || 0)}`}
+                                            </p>
+                                        </div>
+                                        <div
+                                            className={`rounded-full px-3 py-1 text-xs font-medium ${
+                                                restriction.type === 'blocked'
+                                                    ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200'
+                                                    : 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200'
+                                            }`}
+                                        >
+                                            {restriction.type === 'blocked' ? 'Bloqueada' : 'Limitada'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    
+
                     {/* ─── LISTA DE ALUMNOS / HIJOS (only for parents) ────────────────────────────── */}
                     {currentUser.role === 'parent' && children.length > 0 && (
                         <Card className="col-span-1 border-sidebar-border dark:border-sidebar-border shadow-sm flex flex-col">
@@ -277,7 +331,7 @@ export default function Dashboard({ currentUser, children }: DashboardProps) {
                                 <CardTitle>Actividad de Gastos</CardTitle>
                                 <CardDescription>Tus gastos en la plataforma</CardDescription>
                             </div>
-                            <ExpenseFormDialog />
+                            <ExpenseFormDialog onSuccess={() => setSummaryRefreshToken((token) => token + 1)} />
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-wrap items-center gap-2 mb-4">
