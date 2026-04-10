@@ -12,12 +12,22 @@ import {
     PointElement,
     Tooltip,
 } from 'chart.js';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { index as childrenIndex } from '@/routes/children';
-import { ArrowLeftIcon, BarChart3Icon, ReceiptIcon } from 'lucide-react';
+import { ArrowLeftIcon, BarChart3Icon, ReceiptIcon, FilterIcon, XIcon } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { ExpenseCharts } from '@/components/expenses/ExpenseCharts';
 
 Chart.register(
@@ -71,6 +81,10 @@ export default function ChildShow({ targetUser, expenses }: ChildShowProps) {
     const [summary, setSummary] = useState<ExpenseSummaryItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [categoryFilter, setCategoryFilter] = useState<string>('all');
+    const [startDate, setStartDate] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>('');
+    const [showFilters, setShowFilters] = useState(false);
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
 
@@ -169,6 +183,39 @@ export default function ChildShow({ targetUser, expenses }: ChildShowProps) {
             currency: 'USD',
         }).format(amount);
     };
+
+    // Get unique categories
+    const categories = useMemo(() => {
+        return Array.from(new Set(expenses.map((expense) => expense.category?.name).filter(Boolean)));
+    }, [expenses]);
+
+    // Filter expenses
+    const filteredExpenses = useMemo(() => {
+        return expenses.filter((expense) => {
+            // Category filter
+            if (categoryFilter !== 'all' && expense.category?.name !== categoryFilter) {
+                return false;
+            }
+
+            // Date range filter
+            if (startDate && expense.date < startDate) {
+                return false;
+            }
+            if (endDate && expense.date > endDate) {
+                return false;
+            }
+
+            return true;
+        });
+    }, [expenses, categoryFilter, startDate, endDate]);
+
+    const clearFilters = () => {
+        setCategoryFilter('all');
+        setStartDate('');
+        setEndDate('');
+    };
+
+    const hasActiveFilters = categoryFilter !== 'all' || startDate !== '' || endDate !== '';
 
     return (
         <>
@@ -301,15 +348,101 @@ export default function ChildShow({ targetUser, expenses }: ChildShowProps) {
 
                     <TabsContent value="expenses" className={activeTab === 'expenses' ? 'block' : 'hidden'}>
                         <div className="space-y-4">
+                            {/* Filters */}
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-lg font-semibold">Gastos de {targetUser.name}</h2>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setShowFilters(!showFilters)}
+                                >
+                                    <FilterIcon className="h-4 w-4" />
+                                    Filtros
+                                    {hasActiveFilters && (
+                                        <span className="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
+                                            {[categoryFilter !== 'all', startDate, endDate].filter(Boolean).length}
+                                        </span>
+                                    )}
+                                </Button>
+                            </div>
+
+                            {/* Filters Panel */}
+                            {showFilters && (
+                                <Card>
+                                    <CardContent className="pt-6">
+                                        <div className="grid gap-4 md:grid-cols-3">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="category-filter">Categoría</Label>
+                                                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                                                    <SelectTrigger id="category-filter">
+                                                        <SelectValue placeholder="Todas las categorías" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="all">Todas las categorías</SelectItem>
+                                                        {categories.map((category) => (
+                                                            <SelectItem key={category} value={category}>
+                                                                {category}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="start-date">Fecha inicio</Label>
+                                                <Input
+                                                    id="start-date"
+                                                    type="date"
+                                                    value={startDate}
+                                                    onChange={(e) => setStartDate(e.target.value)}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="end-date">Fecha fin</Label>
+                                                <Input
+                                                    id="end-date"
+                                                    type="date"
+                                                    value={endDate}
+                                                    onChange={(e) => setEndDate(e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {hasActiveFilters && (
+                                            <div className="mt-4 flex items-center justify-between">
+                                                <p className="text-sm text-muted-foreground">
+                                                    Mostrando {filteredExpenses.length} de {expenses.length} gastos
+                                                </p>
+                                                <Button variant="ghost" size="sm" onClick={clearFilters}>
+                                                    <XIcon className="h-4 w-4" />
+                                                    Limpiar filtros
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            )}
+
                             {/* Expense Charts */}
-                            <ExpenseCharts expenses={expenses} />
+                            <ExpenseCharts expenses={filteredExpenses} />
 
                             {/* Expense Table */}
                             <section className="rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
                                 <h2 className="text-base font-semibold mb-4">Todos los gastos</h2>
-                                {expenses.length === 0 ? (
-                                    <div className="py-8 text-center text-sm text-muted-foreground">
-                                        No hay gastos registrados
+                                {filteredExpenses.length === 0 ? (
+                                    <div className="py-8 text-center">
+                                        <p className="text-sm text-muted-foreground">
+                                            {hasActiveFilters
+                                                ? 'No hay gastos que coincidan con los filtros'
+                                                : 'No hay gastos registrados'}
+                                        </p>
+                                        {hasActiveFilters && (
+                                            <Button variant="outline" size="sm" className="mt-4" onClick={clearFilters}>
+                                                <XIcon className="h-4 w-4" />
+                                                Limpiar filtros
+                                            </Button>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="overflow-x-auto">
@@ -323,7 +456,7 @@ export default function ChildShow({ targetUser, expenses }: ChildShowProps) {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {expenses.map((expense) => (
+                                                {filteredExpenses.map((expense) => (
                                                     <tr key={expense.id} className="border-b border-sidebar-border/70 last:border-0">
                                                         <td className="py-3 text-sm">
                                                             {new Date(expense.date).toLocaleDateString('es-ES', {
