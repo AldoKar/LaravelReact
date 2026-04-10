@@ -54,7 +54,7 @@ class ExpenseFactory extends Factory
             'amount' => fake()->randomFloat(2, 1, 5000),
             'category' => fake()->randomElement($categories),
             'description' => fake()->optional()->sentence(),
-            'date' => fake()->date(),
+            'date' => fake()->dateTimeBetween('first day of last month', 'last day of last month')->format('Y-m-d'),
         ];
     }
 }
