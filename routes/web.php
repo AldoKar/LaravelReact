@@ -30,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('children', ChildController::class)->only([
         'index', 'show', 'store', 'destroy'
     ]);
+    Route::post('children/{child}/give-money', [ChildController::class, 'giveMoney'])
+        ->name('children.give-money');
 
     // Restrictions routes
     Route::get('children/{child}/restrictions', [RestrictionController::class, 'index'])
