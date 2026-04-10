@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { destroy as childrenDestroy, show as childrenShow, restrictions } from '@/routes/children';
+import children from '@/routes/children';
 import { TrashIcon, UserIcon, EyeIcon, ShieldIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -32,18 +32,18 @@ export function ChildCard({ child }: ChildCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = () => {
-    router.delete(childrenDestroy.url(child.id), {
+    router.delete(children.destroy.url(child.id), {
       onStart: () => setIsDeleting(true),
       onFinish: () => setIsDeleting(false),
     });
   };
 
   const handleViewDashboard = () => {
-    router.visit(childrenShow.url(child.id));
+    router.visit(children.show.url(child.id));
   };
 
   const handleViewRestrictions = () => {
-    router.visit(restrictions.index.url(child.id));
+    router.visit(children.restrictions.index.url(child.id));
   };
 
   const formatCurrency = (amount: string) => {

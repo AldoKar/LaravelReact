@@ -54,6 +54,24 @@ class ChildController extends Controller
             abort(403, 'No autorizado');
         }
 
+        // Get child's expenses
+        $expenses = $child->expenses()
+            ->with('category')
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn($expense) => [
+                'id' => $expense->id,
+                'amount' => number_format($expense->amount, 2, '.', ''),
+                'category' => [
+                    'id' => $expense->category->id,
+                    'name' => $expense->category->name,
+                ],
+                'description' => $expense->description,
+                'date' => $expense->date->format('Y-m-d'),
+                'created_at' => $expense->created_at->toISOString(),
+            ]);
+
         return Inertia::render('children/show', [
             'targetUser' => [
                 'id' => $child->id,
@@ -61,6 +79,7 @@ class ChildController extends Controller
                 'balance' => (float) $child->balance,
                 'role' => $child->role,
             ],
+            'expenses' => $expenses,
         ]);
     }
 
@@ -77,7 +96,7 @@ class ChildController extends Controller
         $validated = $request->validated();
 
         // Create the child account
-        User::create([
+        $child = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
@@ -85,6 +104,9 @@ class ChildController extends Controller
             'parent_id' => $user->id,
             'balance' => 0.00,
         ]);
+
+        // Ensure default categories are created for the child
+        $child->ensureDefaultCategories();
 
         return back()->with('success', 'Cuenta hijo creada exitosamente');
     }
