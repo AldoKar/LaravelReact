@@ -12,8 +12,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { destroy as childrenDestroy, show as childrenShow } from '@/routes/children';
-import { TrashIcon, UserIcon, EyeIcon } from 'lucide-react';
+import { destroy as childrenDestroy, show as childrenShow, restrictions } from '@/routes/children';
+import { TrashIcon, UserIcon, EyeIcon, ShieldIcon } from 'lucide-react';
 import { useState } from 'react';
 
 export interface Child {
@@ -40,6 +40,10 @@ export function ChildCard({ child }: ChildCardProps) {
 
   const handleViewDashboard = () => {
     router.visit(childrenShow.url(child.id));
+  };
+
+  const handleViewRestrictions = () => {
+    router.visit(restrictions.index.url(child.id));
   };
 
   const formatCurrency = (amount: string) => {
@@ -119,6 +123,17 @@ export function ChildCard({ child }: ChildCardProps) {
             >
               <EyeIcon className="h-4 w-4" />
               Ver dashboard
+            </Button>
+          </div>
+          <div>
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              size="sm"
+              onClick={handleViewRestrictions}
+            >
+              <ShieldIcon className="h-4 w-4" />
+              Restricciones
             </Button>
           </div>
         </div>

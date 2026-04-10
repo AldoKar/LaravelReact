@@ -67,6 +67,20 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Get children data if user is a parent
+        $children = [];
+        if ($user->isParent()) {
+            $children = $user->children()
+                ->select('id', 'name', 'balance')
+                ->get()
+                ->map(fn($child) => [
+                    'id' => $child->id,
+                    'nombre' => $child->name,
+                    'monto' => (float) $child->balance,
+                    'avatar' => strtoupper(substr($child->name, 0, 1)),
+                ]);
+        }
+
         return Inertia::render('dashboard', [
             'stats' => [
                 'totalThisMonth' => (float) $totalThisMonth,
@@ -79,6 +93,13 @@ class DashboardController extends Controller
                 'balance' => $targetUser->balance,
                 'role' => $targetUser->role,
             ] : null,
+            'currentUser' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'role' => $user->role,
+                'balance' => (float) $user->balance,
+            ],
+            'children' => $children,
         ]);
     }
 }
