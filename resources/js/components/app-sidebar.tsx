@@ -12,7 +12,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { capitalFamily, dashboard, travel } from '@/routes';
+import { dashboard } from '@/routes';
 import { index as expenses } from '@/routes/expenses';
 import { index as children } from '@/routes/children';
 import type { NavItem } from '@/types';
@@ -76,15 +76,5 @@ const mainNavItemsBase: NavItem[] = [
         title: 'Misiones',
         href: '/missions',
         icon: Trophy,
-    },
-    {
-        title: 'Capital Family',
-        href: capitalFamily(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Capital Travel',
-        href: travel(),
-        icon: LayoutGrid,
     },
 ];
