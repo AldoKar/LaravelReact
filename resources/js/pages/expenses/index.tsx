@@ -87,7 +87,7 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
           </div>
         ) : (
           <ResizablePanelGroup
-            direction="vertical"
+            //direction="vertical"
             className="min-h-[800px] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
           >
             {/* ─── Charts Panel ──────────────────────────────────── */}
