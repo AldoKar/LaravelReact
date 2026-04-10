@@ -39,6 +39,7 @@ class ExpenseController extends Controller
     {
         $expenses = $request->user()
             ->expenses()
+            ->with('category')
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();

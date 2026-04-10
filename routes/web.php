@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -14,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('travel', 'travel')->name('travel');
 
     Route::get('expenses/summary', [ExpenseController::class, 'summary'])->name('expenses.summary');
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
 
     // Expense routes
     Route::resource('expenses', ExpenseController::class)->only([
