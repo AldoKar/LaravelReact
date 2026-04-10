@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ExpenseCharts } from '@/components/expenses/ExpenseCharts';
+import { GiveMoneyDialog } from '@/components/children';
 
 Chart.register(
     CategoryScale,
@@ -236,6 +237,7 @@ export default function ChildShow({ targetUser, expenses }: ChildShowProps) {
                             </p>
                         </div>
                     </div>
+                    <GiveMoneyDialog child={targetUser} />
                 </div>
 
                 <Tabs value={activeTab} className="w-full">

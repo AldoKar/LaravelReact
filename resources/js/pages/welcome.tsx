@@ -609,10 +609,10 @@ export default function Welcome({
     }, []);
 
     const statValues = [
-        { target: 100, suffix: 'M+', label: 'Customers served' },
-        { target: 99, suffix: '.9%', label: 'Uptime guaranteed' },
-        { target: 50, suffix: '+', label: 'States covered' },
-        { target: 24, suffix: '/7', label: 'Customer support' },
+        { target: 100, suffix: 'M+', label: 'Clientes activos' },
+        { target: 99, suffix: '.9%', label: 'Disponibilidad' },
+        { target: 50, suffix: '+', label: 'Categorías creadas' },
+        { target: 24, suffix: '/7', label: 'Soporte inteligente' },
     ];
 
     const s0 = useCountUp(statValues[0].target, stats.isVisible);
@@ -623,44 +623,23 @@ export default function Welcome({
 
     const featureItems = [
         {
-            icon: <CreditCard size={24} />,
-            title: 'Credit Solutions',
-            desc: 'Comprehensive credit card programs with competitive rates, institutional-grade rewards, and zero foreign transaction fees.',
-            color: '#004977',
-            bg: '#EBF4FA',
-        },
-        {
-            icon: <Shield size={24} />,
-            title: 'Enterprise Security',
-            desc: 'Multi-layered fraud detection systems with real-time transaction monitoring and automated threat response protocols.',
-            color: '#004977',
-            bg: '#EBF4FA',
-        },
-        {
-            icon: <TrendingUp size={24} />,
-            title: 'Wealth Analytics',
-            desc: 'Data-driven financial analysis and portfolio optimization tools powered by advanced machine learning algorithms.',
-            color: '#004977',
-            bg: '#EBF4FA',
-        },
-        {
             icon: <Smartphone size={24} />,
-            title: 'Digital Platform',
-            desc: 'Full-service digital banking infrastructure for seamless account management, transfers, and payment processing.',
+            title: 'Asistente IA en WhatsApp',
+            desc: 'Olvida las aplicaciones complejas. Reporta y registra cualquier compra en menos de 2 segundos enviándole un simple mensaje a nuestra Inteligencia Artificial integrada en tu WhatsApp.',
+            color: '#004977',
+            bg: '#EBF4FA',
+        },
+        {
+            icon: <Users size={24} />,
+            title: 'Control Familiar Dinámico',
+            desc: 'Unifica la economía de tu casa. Cada hijo tiene su propio ecosistema de saldos transparentes, dándote visibilidad 24/7 sobre a dónde va cada centavo a través de sus propias restricciones operativas.',
             color: '#004977',
             bg: '#EBF4FA',
         },
         {
             icon: <BarChart3 size={24} />,
-            title: 'Investment Services',
-            desc: 'Institutional-quality research and diversified investment vehicles designed for long-term capital growth.',
-            color: '#004977',
-            bg: '#EBF4FA',
-        },
-        {
-            icon: <Lock size={24} />,
-            title: 'Regulatory Compliance',
-            desc: 'Full FDIC insurance coverage with zero-liability protection and adherence to federal banking regulations.',
+            title: 'Analítica Corporativa de Gastos',
+            desc: 'El dashboard inteligente dibuja exactamente tus patrones de consumo diarios, semanales o mensuales mediante tarjetas automatizadas, separando cada inversión por categoría inteligente.',
             color: '#004977',
             bg: '#EBF4FA',
         },
@@ -671,7 +650,7 @@ export default function Welcome({
             <Head title="Capital LIfe — Banking Reimagined">
                 <meta
                     name="description"
-                    content="Capital LIfe offers credit cards, banking, and loans with innovative technology, no hidden fees, and 24/7 customer support."
+                    content="Capital LIfe ofrece gestión inteligente de finanzas familiares utilizando WhatsApp."
                 />
             </Head>
             <style dangerouslySetInnerHTML={{ __html: landingStyles }} />
@@ -701,22 +680,22 @@ export default function Welcome({
                             className="hidden md:flex"
                         >
                             <a href="#features" className="nav-link">
-                                Solutions
+                                Soluciones
                             </a>
                             <a href="#stats" className="nav-link">
-                                Performance
+                                Rendimiento
                             </a>
                             <a href="#cta" className="nav-link">
-                                Get Started
+                                Comenzar
                             </a>
 
                             {auth.user ? (
                                 <Link href={dashboard()} className="btn-primary" style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem' }}>
-                                    Dashboard
+                                    Panel de Control
                                 </Link>
                             ) : (
                                 <Link href={login()} className="btn-primary" style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem' }}>
-                                    Sign In
+                                    Iniciar Sesión
                                 </Link>
                             )}
                         </div>
@@ -752,16 +731,16 @@ export default function Welcome({
                         </button>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Solutions</a>
-                        <a href="#stats" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Performance</a>
-                        <a href="#cta" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Get Started</a>
+                        <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Soluciones</a>
+                        <a href="#stats" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Rendimiento</a>
+                        <a href="#cta" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Comenzar</a>
                         <div style={{ borderTop: '1px solid #E1E8ED', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {auth.user ? (
-                                <Link href={dashboard()} className="btn-primary" style={{ justifyContent: 'center' }}>Dashboard</Link>
+                                <Link href={dashboard()} className="btn-primary" style={{ justifyContent: 'center' }}>Panel de Control</Link>
                             ) : (
                                 <>
-                                    <Link href={login()} className="btn-outline" style={{ justifyContent: 'center' }}>Sign In</Link>
-                                    {canRegister && <Link href={register()} className="btn-primary" style={{ justifyContent: 'center' }}>Get Started</Link>}
+                                    <Link href={login()} className="btn-outline" style={{ justifyContent: 'center' }}>Iniciar Sesión</Link>
+                                    {canRegister && <Link href={register()} className="btn-primary" style={{ justifyContent: 'center' }}>Crear Cuenta</Link>}
                                 </>
                             )}
                         </div>
@@ -801,9 +780,9 @@ export default function Welcome({
                                     marginBottom: '1.5rem',
                                 }}
                             >
-                                Intelligent Financial
+                                Control Financiero
                                 <br />
-                                Solutions for Growth
+                                Inteligente y Fácil
                             </h1>
 
                             <p
@@ -815,24 +794,23 @@ export default function Welcome({
                                     maxWidth: '500px',
                                 }}
                             >
-                                Capital LIfe delivers comprehensive banking, credit, and investment
-                                services designed to accelerate your financial objectives.
+                                Capital LIfe ofrece servicios integrales de registro, administración familiar y analíticas diseñadas para acelerar tus objetivos económicos.
                             </p>
 
                             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                                 {auth.user ? (
                                     <Link href={dashboard()} className="btn-primary">
-                                        Access Dashboard
+                                        Ir al Panel
                                         <ArrowRight size={16} />
                                     </Link>
                                 ) : (
                                     <>
                                         <Link href={canRegister ? register() : login()} className="btn-primary">
-                                            Open Account
+                                            Crear Cuenta
                                             <ArrowRight size={16} />
                                         </Link>
                                         <Link href={login()} className="btn-secondary">
-                                            Client Login
+                                            Acceso de Cliente
                                         </Link>
                                     </>
                                 )}
@@ -868,15 +846,15 @@ export default function Welcome({
                             style={{ textAlign: 'center', marginBottom: '4rem' }}
                             className={`fade-in-up ${features.isVisible ? 'visible' : ''}`}
                         >
-                            <p className="eyebrow-label">Our Solutions</p>
+                            <p className="eyebrow-label">Nuestras Soluciones</p>
                             <h2 className="section-title">
-                                Comprehensive Financial
+                                Ecosistema Integral
                                 <br />
-                                Services Platform
+                                de Finanzas en Casa
                             </h2>
                             <p className="section-subtitle" style={{ margin: '1rem auto 0' }}>
-                                An integrated suite of banking, credit, and investment solutions
-                                engineered for performance, security, and scalability.
+                                Un conjunto dinámico de control de saldos y monitoreo impulsado
+                                por inteligencia artificial, listo desde WhatsApp.
                             </p>
                         </div>
 
@@ -931,7 +909,7 @@ export default function Welcome({
                                             textDecoration: 'none',
                                         }}
                                     >
-                                        Learn more
+                                        Saber más
                                         <ChevronRight size={16} />
                                     </a>
                                 </div>
@@ -952,11 +930,11 @@ export default function Welcome({
                             style={{ textAlign: 'center', marginBottom: '3rem' }}
                             className={`fade-in-up ${stats.isVisible ? 'visible' : ''}`}
                         >
-                            <p className="eyebrow-label">Performance</p>
+                            <p className="eyebrow-label">Rendimiento</p>
                             <h2 className="section-title">
-                                Proven Results,
+                                Resultados Reales,
                                 <br />
-                                Measurable Impact
+                                Crecimiento Constante
                             </h2>
                         </div>
 
@@ -1010,7 +988,7 @@ export default function Welcome({
                                 marginBottom: '1.25rem',
                             }}
                         >
-                            Get Started Today
+                            Comienza Hoy
                         </p>
                         <h2
                             style={{
@@ -1022,9 +1000,9 @@ export default function Welcome({
                                 marginBottom: '1.25rem',
                             }}
                         >
-                            Start Building Your
+                            Inicia Tu Futuro
                             <br />
-                            Financial Strategy
+                            Financiero Inteligente
                         </h2>
                         <p
                             style={{
@@ -1036,23 +1014,22 @@ export default function Welcome({
                                 margin: '0 auto 2.5rem',
                             }}
                         >
-                            Partner with Capital LIfe to access institutional-grade financial
-                            services, advanced analytics, and dedicated advisory support.
+                            Únete ahora a docenas de familias en Capital LIfe para acceder a una plataforma segura de ahorro, seguimiento integral y asistencia por IA en tu día a día.
                         </p>
                         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                             {auth.user ? (
                                 <Link href={dashboard()} className="btn-primary" style={{ background: 'white', color: '#004977' }}>
-                                    Access Dashboard
+                                    Ir al Panel
                                     <ArrowRight size={16} />
                                 </Link>
                             ) : (
                                 <>
                                     <Link href={canRegister ? register() : login()} className="btn-primary" style={{ background: 'white', color: '#004977' }}>
-                                        Open Account
+                                        Crear Cuenta
                                         <ArrowRight size={16} />
                                     </Link>
                                     <Link href={login()} className="btn-secondary">
-                                        Client Login
+                                        Acceso a Clientes
                                     </Link>
                                 </>
                             )}
@@ -1077,37 +1054,37 @@ export default function Welcome({
                                     <span style={{ color: 'white', fontWeight: 800, fontSize: '1.125rem', letterSpacing: '-0.02em' }}>Capital LIfe</span>
                                 </div>
                                 <p style={{ fontSize: '0.8125rem', lineHeight: 1.7, maxWidth: '280px' }}>
-                                    Delivering institutional-grade financial services to individuals and businesses nationwide.
+                                    Proveiendo educación financiera y administración familiar clara y segura para usuarios en toda la red.
                                 </p>
                             </div>
 
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '-0.01em' }}>Solutions</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '-0.01em' }}>Plataforma</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                                    <a href="#">Credit Programs</a>
-                                    <a href="#">Savings Accounts</a>
-                                    <a href="#">Business Banking</a>
-                                    <a href="#">Lending Services</a>
+                                    <a href="#">Integración WhatsApp</a>
+                                    <a href="#">Supervisión Parental</a>
+                                    <a href="#">Dashboard Visual</a>
+                                    <a href="#">Límites Geográficos</a>
                                 </div>
                             </div>
 
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Company</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Compañía</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                                    <a href="#">About</a>
-                                    <a href="#">Careers</a>
-                                    <a href="#">Investor Relations</a>
-                                    <a href="#">Newsroom</a>
+                                    <a href="#">Sobre nosotros</a>
+                                    <a href="#">Soporte 24/7</a>
+                                    <a href="#">Proyectos</a>
+                                    <a href="#">Actualizaciones</a>
                                 </div>
                             </div>
 
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Legal & Compliance</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Seguridad</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                                    <a href="#">Support Center</a>
-                                    <a href="#">Security Policy</a>
-                                    <a href="#">Privacy Notice</a>
-                                    <a href="#">Regulatory Disclosures</a>
+                                    <a href="#">Centro de Privacidad</a>
+                                    <a href="#">Certificaciones</a>
+                                    <a href="#">Términos Contractuales</a>
+                                    <a href="#">Políticas de Servicio</a>
                                 </div>
                             </div>
                         </div>
@@ -1124,10 +1101,10 @@ export default function Welcome({
                                 fontSize: '0.8125rem',
                             }}
                         >
-                            <span>© {new Date().getFullYear()} Capital LIfe. All rights reserved.</span>
+                            <span>© {new Date().getFullYear()} Capital LIfe. Todos los derechos reservados.</span>
                             <div style={{ display: 'flex', gap: '1.5rem' }}>
-                                <a href="#">Terms</a>
-                                <a href="#">Privacy</a>
+                                <a href="#">Avisos Legales</a>
+                                <a href="#">Seguridad</a>
                                 <a href="#">Cookies</a>
                             </div>
                         </div>

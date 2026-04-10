@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChildRequest;
+use App\Http\Requests\GiveMoneyRequest;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -81,6 +84,55 @@ class ChildController extends Controller
             ],
             'expenses' => $expenses,
         ]);
+    }
+
+    /**
+     * Give money to a child account and record the transfer as a parent expense.
+     */
+    public function giveMoney(GiveMoneyRequest $request, User $child): RedirectResponse
+    {
+        $parent = $request->user();
+
+        if ($child->parent_id !== $parent->id || ! $child->isChild()) {
+            abort(403, 'No autorizado');
+        }
+
+        $validated = $request->validated();
+        $amount = (float) $validated['amount'];
+
+        DB::transaction(function () use ($parent, $child, $amount): void {
+            $lockedParent = User::query()
+                ->whereKey($parent->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $lockedChild = User::query()
+                ->whereKey($child->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $familyCategory = Category::firstOrCreate(
+                [
+                    'user_id' => $lockedParent->id,
+                    'name' => 'Family',
+                ],
+                [
+                    'icon' => null,
+                ],
+            );
+
+            $lockedParent->expenses()->create([
+                'category_id' => $familyCategory->id,
+                'amount' => $amount,
+                'description' => 'Dinero entregado a '.$lockedChild->name,
+                'date' => now()->toDateString(),
+            ]);
+
+            $lockedParent->decrement('balance', $amount);
+            $lockedChild->increment('balance', $amount);
+        });
+
+        return back()->with('success', 'Dinero entregado exitosamente');
     }
 
     /**

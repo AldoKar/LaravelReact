@@ -108,6 +108,11 @@ class RestrictionController extends Controller
             ]
         );
 
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => 'Restricción de horario configurada exitosamente',
+        ]);
+
         return back()->with('success', 'Restricción de horario configurada exitosamente');
     }
 
@@ -146,6 +151,11 @@ class RestrictionController extends Controller
             'days' => $validated['days'],
             'start_time' => $validated['start_time'],
             'end_time' => $validated['end_time'],
+        ]);
+
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => 'Restricción de horario actualizada exitosamente',
         ]);
 
         return back()->with('success', 'Restricción de horario actualizada exitosamente');
@@ -193,6 +203,11 @@ class RestrictionController extends Controller
             'category_id' => $validated['category_id'],
             'type' => $validated['type'],
             'monthly_limit' => $validated['type'] === 'limited' ? $validated['monthly_limit'] : null,
+        ]);
+
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => 'Restricción de categoría creada exitosamente',
         ]);
 
         return back()->with('success', 'Restricción de categoría creada exitosamente');

@@ -50,6 +50,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; border: string }> = {
   'Dining Out': { bg: 'rgba(249, 115, 22, 0.7)', border: 'rgb(249, 115, 22)' },
   'Home Maintenance': { bg: 'rgba(14, 165, 233, 0.7)', border: 'rgb(14, 165, 233)' },
   'Public Transit & Rideshare': { bg: 'rgba(99, 102, 241, 0.7)', border: 'rgb(99, 102, 241)' },
+  Family: { bg: 'rgba(16, 185, 129, 0.7)', border: 'rgb(16, 185, 129)' },
 };
 
 const DEFAULT_COLOR = { bg: 'rgba(156, 163, 175, 0.7)', border: 'rgb(156, 163, 175)' };
