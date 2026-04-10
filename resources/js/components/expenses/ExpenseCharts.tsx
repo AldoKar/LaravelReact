@@ -334,7 +334,7 @@ export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
         <Card className="lg:col-span-2 border-sidebar-border/70 dark:border-sidebar-border">
           <CardHeader>
             <CardTitle className="text-sm font-semibold">
-              📈 Gastos por Fecha
+              Gastos por Fecha
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -348,7 +348,7 @@ export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
         <Card className="border-sidebar-border/70 dark:border-sidebar-border">
           <CardHeader>
             <CardTitle className="text-sm font-semibold">
-              🍩 Gastos por Categoría
+              Gastos por Categoría
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -362,7 +362,7 @@ export function ExpenseCharts({ expenses }: ExpenseChartsProps) {
         <Card className="lg:col-span-3 border-sidebar-border/70 dark:border-sidebar-border">
           <CardHeader>
             <CardTitle className="text-sm font-semibold">
-              💰 Top 10 Gastos por Monto
+              Top 10 Gastos por Monto
             </CardTitle>
           </CardHeader>
           <CardContent>

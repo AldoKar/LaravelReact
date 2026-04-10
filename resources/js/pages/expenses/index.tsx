@@ -87,11 +87,10 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
           </div>
         ) : (
           <ResizablePanelGroup
-            //direction="vertical"
             className="min-h-[800px] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
           >
             {/* ─── Charts Panel ──────────────────────────────────── */}
-            <ResizablePanel defaultSize={55} minSize={25}>
+            <ResizablePanel defaultSize={50} minSize={25}>
               <div className="h-full overflow-y-auto p-4">
                 <ExpenseCharts expenses={expenses} />
               </div>
@@ -100,7 +99,7 @@ export default function ExpensesIndex({ expenses }: ExpensesIndexProps) {
             <ResizableHandle withHandle />
 
             {/* ─── Table Panel ───────────────────────────────────── */}
-            <ResizablePanel defaultSize={45} minSize={20}>
+            <ResizablePanel defaultSize={50} minSize={20}>
               <div className="h-full overflow-y-auto">
                 <Table>
                   <TableHeader>

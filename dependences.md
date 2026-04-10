@@ -7,3 +7,4 @@
 - npx shadcn@latest add field
 - npx shadcn@latest add resizable
 - npm install chart.js
+- composer require laravel/ai

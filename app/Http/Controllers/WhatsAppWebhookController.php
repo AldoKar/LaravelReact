@@ -51,8 +51,33 @@ class WhatsAppWebhookController extends Controller
 
                         Log::info("WhatsApp Message received from {$from}: {$text}");
 
-                        // TODO: Triggers for Capital Family
-                        // e.g., if $text == "saldo", check DB and reply using WhatsApp API.
+                        $user = \App\Models\User::where('phone', $from)->first();
+
+                        if (! $user) {
+                            $replyText = "Lo siento, tu número no está registrado en Capital Family.";
+                        } else {
+                            try {
+                                $agent = new \App\Ai\Agents\WhatsAppExpenseAgent($user);
+                                $agentResponse = $agent->prompt($text);
+                                $replyText = $agentResponse->text;
+                            } catch (\Exception $e) {
+                                Log::error('AI Error: ' . $e->getMessage());
+                                $replyText = "Hubo un error al procesar tu mensaje financiaro. Intenta más tarde.";
+                            }
+                        }
+
+                        $phoneId = env('WHATSAPP_PHONE_ID');
+                        $token = env('WHATSAPP_TOKEN');
+                        
+                        if ($phoneId && $token) {
+                            \Illuminate\Support\Facades\Http::withToken($token)
+                                ->post("https://graph.facebook.com/v22.0/{$phoneId}/messages", [
+                                    'messaging_product' => 'whatsapp',
+                                    'to' => $from,
+                                    'type' => 'text',
+                                    'text' => ['body' => $replyText]
+                                ]);
+                        }
                     }
                 }
             }
