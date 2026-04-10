@@ -23,18 +23,13 @@ class WhatsAppExpenseAgent implements Agent, Conversational, HasTools
         return 'gemini';
     }
 
-    public function model(): string
-    {
-        return 'gemini-1.5-flash';
-    }
-
 
     /**
      * Get the instructions that the agent should follow.
      */
     public function instructions(): Stringable|string
     {
-        return "Eres el asistente financiero de Capital Family. Estás hablando con {$this->user->name}. "
+        return "Eres el asistente financiero de Capital Life. Estás hablando con {$this->user->name}. "
              . "Su saldo actual en su cuenta principal es de \${$this->user->balance}. "
              . "Actúa como un analista amable y profesional. Si el usuario te indica un gasto, clasifícalo y utiliza tu herramienta "
              . "para insertarlo en la base de datos automáticamente. Luego, respóndele confirmando el gasto y su saldo restante.";
