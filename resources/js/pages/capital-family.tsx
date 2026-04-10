@@ -21,6 +21,7 @@ export default function CapitalFamily() {
     const [form, setForm] = useState({
         name: '',
         email: '',
+        phone: '',
         password: '',
     });
 
@@ -30,6 +31,7 @@ export default function CapitalFamily() {
         setForm({
             name: '',
             email: '',
+            phone: '',
             password: '',
         });
     };
@@ -107,6 +109,26 @@ export default function CapitalFamily() {
                                                     }))
                                                 }
                                                 placeholder="correo@ejemplo.com"
+                                            />
+                                        </Field>
+
+                                        <Field>
+                                            <FieldLabel htmlFor="child-phone">
+                                                Teléfono
+                                            </FieldLabel>
+                                            <Input
+                                                id="child-phone"
+                                                type="tel"
+                                                required
+                                                autoComplete="tel"
+                                                value={form.phone}
+                                                onChange={(event) =>
+                                                    setForm((prev) => ({
+                                                        ...prev,
+                                                        phone: event.target.value,
+                                                    }))
+                                                }
+                                                placeholder="+1 (555) 000-0000"
                                             />
                                         </Field>
 

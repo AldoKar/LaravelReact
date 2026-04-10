@@ -130,9 +130,9 @@ const landingStyles = `
 .feature-card {
   background: var(--co-white);
   border: 1px solid var(--co-gray-200);
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 2.5rem 2rem;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -144,15 +144,15 @@ const landingStyles = `
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--co-blue), var(--co-red));
+  background: var(--co-blue);
   transform: scaleX(0);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s ease;
   transform-origin: left;
 }
 
 .feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0, 73, 119, 0.12), 0 8px 24px rgba(0, 73, 119, 0.06);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 73, 119, 0.1);
   border-color: transparent;
 }
 
@@ -161,18 +161,18 @@ const landingStyles = `
 }
 
 .feature-card .icon-wrapper {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
 }
 
 .feature-card:hover .icon-wrapper {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 /* Primary button */
@@ -181,22 +181,22 @@ const landingStyles = `
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 2rem;
-  background: var(--co-red);
+  background: var(--co-blue);
   color: white;
-  border-radius: 12px;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
   text-decoration: none;
   letter-spacing: -0.01em;
 }
 
 .btn-primary:hover {
-  background: var(--co-red-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(208, 48, 39, 0.3);
+  background: var(--co-blue-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 73, 119, 0.3);
 }
 
 /* Secondary button */
@@ -205,23 +205,22 @@ const landingStyles = `
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: transparent;
   color: white;
-  border-radius: 12px;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9375rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
   text-decoration: none;
-  backdrop-filter: blur(8px);
   letter-spacing: -0.01em;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.35);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
 }
 
 /* Outline button */
@@ -232,12 +231,12 @@ const landingStyles = `
   padding: 0.875rem 2rem;
   background: transparent;
   color: var(--co-blue);
-  border-radius: 12px;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.9375rem;
-  border: 2px solid var(--co-blue);
+  font-size: 0.875rem;
+  border: 1.5px solid var(--co-blue);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s ease;
   text-decoration: none;
   letter-spacing: -0.01em;
 }
@@ -245,8 +244,8 @@ const landingStyles = `
 .btn-outline:hover {
   background: var(--co-blue);
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 73, 119, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 73, 119, 0.2);
 }
 
 /* Stats section */
@@ -260,9 +259,9 @@ const landingStyles = `
 }
 
 .stat-number {
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: 2.75rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
   line-height: 1;
   background: linear-gradient(135deg, var(--co-blue), var(--co-blue-light));
   -webkit-background-clip: text;
@@ -479,20 +478,31 @@ const landingStyles = `
   background: linear-gradient(180deg, var(--co-red), var(--co-red-dark));
 }
 
+/* Eyebrow label */
+.eyebrow-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--co-blue);
+  margin-bottom: 1.25rem;
+}
+
 /* Section title */
 .section-title {
   font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--co-gray-900);
 }
 
 .section-subtitle {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: var(--co-gray-500);
   line-height: 1.7;
   max-width: 600px;
+  font-weight: 400;
 }
 
 @media (max-width: 768px) {
@@ -563,7 +573,7 @@ function CapitalOneLogo({ scrolled }: { scrolled: boolean }) {
                 className="nav-logo-text"
                 style={{
                     fontSize: '1.25rem',
-                    fontWeight: 800,
+                    fontWeight: 500,
                     letterSpacing: '-0.03em',
                     color: scrolled ? '#004977' : 'white',
                     transition: 'color 0.3s ease',
@@ -613,46 +623,46 @@ export default function Welcome({
 
     const featureItems = [
         {
-            icon: <CreditCard size={26} />,
-            title: 'Smart Credit Cards',
-            desc: 'Earn unlimited rewards on every purchase. No annual fee, no foreign transaction fees.',
+            icon: <CreditCard size={24} />,
+            title: 'Credit Solutions',
+            desc: 'Comprehensive credit card programs with competitive rates, institutional-grade rewards, and zero foreign transaction fees.',
             color: '#004977',
             bg: '#EBF4FA',
         },
         {
-            icon: <Shield size={26} />,
-            title: 'Advanced Security',
-            desc: 'Real-time fraud monitoring with instant alerts. Your money is always protected.',
-            color: '#D03027',
-            bg: '#FDEEEE',
-        },
-        {
-            icon: <TrendingUp size={26} />,
-            title: 'Financial Insights',
-            desc: 'AI-powered spending analysis and personalized recommendations to grow your wealth.',
+            icon: <Shield size={24} />,
+            title: 'Enterprise Security',
+            desc: 'Multi-layered fraud detection systems with real-time transaction monitoring and automated threat response protocols.',
             color: '#004977',
             bg: '#EBF4FA',
         },
         {
-            icon: <Smartphone size={26} />,
-            title: 'Mobile Banking',
-            desc: 'Manage your accounts anywhere. Deposit checks, send money, and pay bills instantly.',
-            color: '#D03027',
-            bg: '#FDEEEE',
-        },
-        {
-            icon: <BarChart3 size={26} />,
-            title: 'Investment Tools',
-            desc: 'Build your portfolio with easy-to-use tools and expert-curated market insights.',
+            icon: <TrendingUp size={24} />,
+            title: 'Wealth Analytics',
+            desc: 'Data-driven financial analysis and portfolio optimization tools powered by advanced machine learning algorithms.',
             color: '#004977',
             bg: '#EBF4FA',
         },
         {
-            icon: <Lock size={26} />,
-            title: 'Zero Liability',
-            desc: "You won't be responsible for unauthorized charges. Bank with total peace of mind.",
-            color: '#D03027',
-            bg: '#FDEEEE',
+            icon: <Smartphone size={24} />,
+            title: 'Digital Platform',
+            desc: 'Full-service digital banking infrastructure for seamless account management, transfers, and payment processing.',
+            color: '#004977',
+            bg: '#EBF4FA',
+        },
+        {
+            icon: <BarChart3 size={24} />,
+            title: 'Investment Services',
+            desc: 'Institutional-quality research and diversified investment vehicles designed for long-term capital growth.',
+            color: '#004977',
+            bg: '#EBF4FA',
+        },
+        {
+            icon: <Lock size={24} />,
+            title: 'Regulatory Compliance',
+            desc: 'Full FDIC insurance coverage with zero-liability protection and adherence to federal banking regulations.',
+            color: '#004977',
+            bg: '#EBF4FA',
         },
     ];
 
@@ -691,13 +701,13 @@ export default function Welcome({
                             className="hidden md:flex"
                         >
                             <a href="#features" className="nav-link">
-                                Features
+                                Solutions
                             </a>
                             <a href="#stats" className="nav-link">
-                                About
+                                Performance
                             </a>
                             <a href="#cta" className="nav-link">
-                                Contact
+                                Get Started
                             </a>
 
                             {auth.user ? (
@@ -705,20 +715,9 @@ export default function Welcome({
                                     Dashboard
                                 </Link>
                             ) : (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                    <Link
-                                        href={login()}
-                                        className="nav-link"
-                                        style={{ fontWeight: 600 }}
-                                    >
-                                        Sign In
-                                    </Link>
-                                    {canRegister && (
-                                        <Link href={register()} className="btn-primary" style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem' }}>
-                                            Get Started
-                                        </Link>
-                                    )}
-                                </div>
+                                <Link href={login()} className="btn-primary" style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem' }}>
+                                    Sign In
+                                </Link>
                             )}
                         </div>
 
@@ -753,9 +752,9 @@ export default function Welcome({
                         </button>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Features</a>
-                        <a href="#stats" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>About</a>
-                        <a href="#cta" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Contact</a>
+                        <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Solutions</a>
+                        <a href="#stats" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Performance</a>
+                        <a href="#cta" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.125rem', fontWeight: 600, color: '#3A4A5C', textDecoration: 'none' }}>Get Started</a>
                         <div style={{ borderTop: '1px solid #E1E8ED', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {auth.user ? (
                                 <Link href={dashboard()} className="btn-primary" style={{ justifyContent: 'center' }}>Dashboard</Link>
@@ -791,163 +790,72 @@ export default function Welcome({
                     >
                         {/* Left content */}
                         <div style={{ flex: '1 1 480px', minWidth: '280px' }}>
-                            <div className="badge" style={{ marginBottom: '1.5rem' }}>
-                                <Shield size={14} />
-                                <span>FDIC Insured · Trusted by Millions</span>
-                            </div>
 
                             <h1
                                 style={{
-                                    fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
-                                    fontWeight: 900,
+                                    fontSize: 'clamp(2.25rem, 5vw, 3.25rem)',
+                                    fontWeight: 300,
                                     color: 'white',
-                                    lineHeight: 1.08,
-                                    letterSpacing: '-0.04em',
+                                    lineHeight: 1.2,
+                                    letterSpacing: '-0.02em',
                                     marginBottom: '1.5rem',
                                 }}
                             >
-                                Banking that works
+                                Intelligent Financial
                                 <br />
-                                <span style={{ color: 'rgba(255,255,255,0.5)' }}>for </span>
-                                <span
-                                    style={{
-                                        background: 'linear-gradient(135deg, #FF6B6B, #D03027)',
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                    }}
-                                >
-                                    you
-                                </span>
+                                Solutions for Growth
                             </h1>
 
                             <p
                                 style={{
-                                    fontSize: '1.125rem',
-                                    color: 'rgba(255,255,255,0.6)',
+                                    fontSize: '1.0625rem',
+                                    color: 'rgba(255,255,255,0.55)',
                                     lineHeight: 1.7,
                                     marginBottom: '2.5rem',
-                                    maxWidth: '480px',
+                                    maxWidth: '500px',
                                 }}
                             >
-                                No fees, no minimums, no hassle. Open an account in minutes and
-                                start building your financial future with confidence.
+                                Capital LIfe delivers comprehensive banking, credit, and investment
+                                services designed to accelerate your financial objectives.
                             </p>
 
                             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                                 {auth.user ? (
                                     <Link href={dashboard()} className="btn-primary">
-                                        Go to Dashboard
-                                        <ArrowRight size={18} />
+                                        Access Dashboard
+                                        <ArrowRight size={16} />
                                     </Link>
                                 ) : (
                                     <>
                                         <Link href={canRegister ? register() : login()} className="btn-primary">
-                                            Open an Account
-                                            <ArrowRight size={18} />
+                                            Open Account
+                                            <ArrowRight size={16} />
                                         </Link>
                                         <Link href={login()} className="btn-secondary">
-                                            Sign In
+                                            Client Login
                                         </Link>
                                     </>
                                 )}
                             </div>
-
-                            <div
-                                style={{
-                                    marginTop: '3rem',
-                                    display: 'flex',
-                                    gap: '2.5rem',
-                                    flexWrap: 'wrap',
-                                }}
-                            >
-                                <div>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white' }}>$0</div>
-                                    <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>Monthly fees</div>
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white' }}>4.25%</div>
-                                    <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>APY Savings</div>
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white' }}>2%</div>
-                                    <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>Cash Back</div>
-                                </div>
-                            </div>
                         </div>
 
-                        {/* Right - Card mockup */}
-                        <div style={{ flex: '1 1 380px', display: 'flex', justifyContent: 'center', minWidth: '280px' }}>
-                            <div className="hero-card-mock">
-                                <div className="mock-label" style={{ marginBottom: '0.5rem' }}>Total Balance</div>
-                                <div className="mock-balance" style={{ marginBottom: '2rem' }}>$24,850</div>
-
-                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '120px', marginBottom: '1.5rem' }}>
-                                    {[45, 62, 38, 78, 55, 90, 72, 85, 68, 95, 82, 70].map((h, i) => (
-                                        <div
-                                            key={i}
-                                            className={`mock-chart-bar ${i === 9 ? 'red' : ''}`}
-                                            style={{
-                                                flex: 1,
-                                                height: `${h}%`,
-                                                opacity: 0.7 + (i * 0.025),
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div>
-                                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>This Month</div>
-                                        <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#4ADE80' }}>+$2,340</div>
-                                    </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#4ADE80', fontSize: '0.8125rem', fontWeight: 600 }}>
-                                        <TrendingUp size={14} />
-                                        <span>+12.5%</span>
-                                    </div>
-                                </div>
-                            </div>
+                        {/* Right - Image */}
+                        <div style={{ flex: '1 1 420px', display: 'flex', justifyContent: 'center', minWidth: '280px' }}>
+                            <img
+                                src="/CapitalOnePicture.avif"
+                                alt="Capital LIfe"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '500px',
+                                    borderRadius: '16px',
+                                    boxShadow: '0 24px 64px rgba(0, 0, 0, 0.3)',
+                                    objectFit: 'cover',
+                                }}
+                            />
                         </div>
                     </div>
                 </section>
 
-                {/* ─── TRUST BAR ───────────────────────── */}
-                <section className="trust-banner" style={{ padding: '1.5rem 0' }}>
-                    <div
-                        style={{
-                            maxWidth: '1200px',
-                            margin: '0 auto',
-                            padding: '0 1.5rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '3rem',
-                            flexWrap: 'wrap',
-                        }}
-                    >
-                        {[
-                            { icon: <Lock size={18} />, text: '256-bit Encryption' },
-                            { icon: <Shield size={18} />, text: 'FDIC Insured' },
-                            { icon: <Users size={18} />, text: '100M+ Customers' },
-                            { icon: <Globe size={18} />, text: 'Available Nationwide' },
-                        ].map((item, i) => (
-                            <div
-                                key={i}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    color: '#6B7B8D',
-                                    fontSize: '0.8125rem',
-                                    fontWeight: 600,
-                                    letterSpacing: '-0.01em',
-                                }}
-                            >
-                                {item.icon}
-                                <span>{item.text}</span>
-                            </div>
-                        ))}
-                    </div>
-                </section>
 
                 {/* ─── FEATURES ────────────────────────── */}
                 <section
@@ -960,15 +868,15 @@ export default function Welcome({
                             style={{ textAlign: 'center', marginBottom: '4rem' }}
                             className={`fade-in-up ${features.isVisible ? 'visible' : ''}`}
                         >
-                            <div className="accent-line" style={{ margin: '0 auto 1.5rem' }} />
+                            <p className="eyebrow-label">Our Solutions</p>
                             <h2 className="section-title">
-                                Everything you need to
+                                Comprehensive Financial
                                 <br />
-                                manage your money
+                                Services Platform
                             </h2>
                             <p className="section-subtitle" style={{ margin: '1rem auto 0' }}>
-                                Powerful tools and features designed to give you complete control over
-                                your finances, all in one place.
+                                An integrated suite of banking, credit, and investment solutions
+                                engineered for performance, security, and scalability.
                             </p>
                         </div>
 
@@ -993,10 +901,10 @@ export default function Welcome({
                                     <h3
                                         style={{
                                             fontSize: '1.125rem',
-                                            fontWeight: 700,
+                                            fontWeight: 600,
                                             color: '#1A2332',
                                             marginBottom: '0.75rem',
-                                            letterSpacing: '-0.02em',
+                                            letterSpacing: '-0.01em',
                                         }}
                                     >
                                         {f.title}
@@ -1044,11 +952,11 @@ export default function Welcome({
                             style={{ textAlign: 'center', marginBottom: '3rem' }}
                             className={`fade-in-up ${stats.isVisible ? 'visible' : ''}`}
                         >
-                            <div className="accent-line" style={{ margin: '0 auto 1.5rem' }} />
+                            <p className="eyebrow-label">Performance</p>
                             <h2 className="section-title">
-                                Trusted by millions
+                                Proven Results,
                                 <br />
-                                across the nation
+                                Measurable Impact
                             </h2>
                         </div>
 
@@ -1092,47 +1000,59 @@ export default function Welcome({
                         }}
                         className={`fade-in-up ${cta.isVisible ? 'visible' : ''}`}
                     >
-                        <h2
+                        <p
                             style={{
-                                fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
-                                fontWeight: 800,
-                                color: 'white',
-                                letterSpacing: '-0.03em',
-                                lineHeight: 1.15,
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                letterSpacing: '0.12em',
+                                textTransform: 'uppercase',
+                                color: 'rgba(255,255,255,0.45)',
                                 marginBottom: '1.25rem',
                             }}
                         >
-                            Ready to take control
+                            Get Started Today
+                        </p>
+                        <h2
+                            style={{
+                                fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                                fontWeight: 300,
+                                color: 'white',
+                                letterSpacing: '-0.02em',
+                                lineHeight: 1.2,
+                                marginBottom: '1.25rem',
+                            }}
+                        >
+                            Start Building Your
                             <br />
-                            of your finances?
+                            Financial Strategy
                         </h2>
                         <p
                             style={{
                                 fontSize: '1.0625rem',
-                                color: 'rgba(255,255,255,0.6)',
+                                color: 'rgba(255,255,255,0.55)',
                                 lineHeight: 1.7,
                                 marginBottom: '2.5rem',
-                                maxWidth: '480px',
+                                maxWidth: '520px',
                                 margin: '0 auto 2.5rem',
                             }}
                         >
-                            Join millions of people who trust Capital LIfe for their banking,
-                            credit cards, and financial needs.
+                            Partner with Capital LIfe to access institutional-grade financial
+                            services, advanced analytics, and dedicated advisory support.
                         </p>
                         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                             {auth.user ? (
-                                <Link href={dashboard()} className="btn-primary" style={{ background: 'white', color: '#D03027' }}>
-                                    Go to Dashboard
-                                    <ArrowRight size={18} />
+                                <Link href={dashboard()} className="btn-primary" style={{ background: 'white', color: '#004977' }}>
+                                    Access Dashboard
+                                    <ArrowRight size={16} />
                                 </Link>
                             ) : (
                                 <>
-                                    <Link href={canRegister ? register() : login()} className="btn-primary" style={{ background: 'white', color: '#D03027' }}>
-                                        Open a Free Account
-                                        <ArrowRight size={18} />
+                                    <Link href={canRegister ? register() : login()} className="btn-primary" style={{ background: 'white', color: '#004977' }}>
+                                        Open Account
+                                        <ArrowRight size={16} />
                                     </Link>
                                     <Link href={login()} className="btn-secondary">
-                                        Sign In
+                                        Client Login
                                     </Link>
                                 </>
                             )}
@@ -1157,37 +1077,37 @@ export default function Welcome({
                                     <span style={{ color: 'white', fontWeight: 800, fontSize: '1.125rem', letterSpacing: '-0.02em' }}>Capital LIfe</span>
                                 </div>
                                 <p style={{ fontSize: '0.8125rem', lineHeight: 1.7, maxWidth: '280px' }}>
-                                    Banking reimagined for the modern world. Your financial future starts here.
+                                    Delivering institutional-grade financial services to individuals and businesses nationwide.
                                 </p>
                             </div>
 
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '-0.01em' }}>Products</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '-0.01em' }}>Solutions</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                                    <a href="#">Credit Cards</a>
-                                    <a href="#">Savings</a>
-                                    <a href="#">Checking</a>
-                                    <a href="#">Auto Loans</a>
+                                    <a href="#">Credit Programs</a>
+                                    <a href="#">Savings Accounts</a>
+                                    <a href="#">Business Banking</a>
+                                    <a href="#">Lending Services</a>
                                 </div>
                             </div>
 
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '-0.01em' }}>Company</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Company</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                                    <a href="#">About Us</a>
+                                    <a href="#">About</a>
                                     <a href="#">Careers</a>
-                                    <a href="#">Press</a>
-                                    <a href="#">Investors</a>
+                                    <a href="#">Investor Relations</a>
+                                    <a href="#">Newsroom</a>
                                 </div>
                             </div>
 
                             <div>
-                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '-0.01em' }}>Support</h4>
+                                <h4 style={{ color: 'white', fontWeight: 700, fontSize: '0.875rem', marginBottom: '1rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Legal & Compliance</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                                    <a href="#">Help Center</a>
-                                    <a href="#">Contact Us</a>
-                                    <a href="#">Security</a>
-                                    <a href="#">Privacy</a>
+                                    <a href="#">Support Center</a>
+                                    <a href="#">Security Policy</a>
+                                    <a href="#">Privacy Notice</a>
+                                    <a href="#">Regulatory Disclosures</a>
                                 </div>
                             </div>
                         </div>

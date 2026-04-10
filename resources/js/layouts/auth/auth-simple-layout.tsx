@@ -22,7 +22,8 @@ const authStyles = `
   overflow: hidden;
   padding: 3rem;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (min-width: 1024px) {
@@ -154,6 +155,7 @@ const authStyles = `
 /* Form styling overrides */
 .auth-form-container input[type="email"],
 .auth-form-container input[type="text"],
+.auth-form-container input[type="tel"],
 .auth-form-container input[type="password"] {
   border: 1.5px solid #E1E8ED !important;
   border-radius: 10px !important;
@@ -166,6 +168,7 @@ const authStyles = `
 
 .auth-form-container input[type="email"]:focus,
 .auth-form-container input[type="text"]:focus,
+.auth-form-container input[type="tel"]:focus,
 .auth-form-container input[type="password"]:focus {
   border-color: #004977 !important;
   box-shadow: 0 0 0 3px rgba(0,73,119,0.1) !important;
@@ -276,142 +279,81 @@ const authStyles = `
 `;
 
 export default function AuthSimpleLayout({
-    children,
-    title,
-    description,
+  children,
+  title,
+  description,
 }: AuthLayoutProps) {
-    return (
-        <>
-            <style dangerouslySetInnerHTML={{ __html: authStyles }} />
-            <div className="auth-page">
-                {/* ─── LEFT BRAND PANEL ────────────── */}
-                <div className="auth-brand-panel">
-                    <div className="auth-shape auth-shape-1" />
-                    <div className="auth-shape auth-shape-2" />
-                    <div className="auth-shape auth-shape-3" />
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: authStyles }} />
+      <div className="auth-page">
+        {/* ─── LEFT BRAND PANEL ────────────── */}
+        <div className="auth-brand-panel">
+          <div className="auth-shape auth-shape-1" />
+          <div className="auth-shape auth-shape-2" />
+          <div className="auth-shape auth-shape-3" />
 
-                    {/* Top - Logo */}
-                    <div style={{ position: 'relative', zIndex: 1 }}>
-                        <Link href={home()} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }}>
-                        <img src="/CapitalOneLogo.png" alt="Capital LIfe" style={{ width: '36px', height: '36px', objectFit: 'cover', borderRadius: '999px' }} />
-                            <span style={{ color: 'white', fontSize: '1.375rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
-                          Capital LIfe
-                            </span>
-                        </Link>
-                    </div>
+          {/* Middle - Features */}
+          <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+            <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.2, marginBottom: '0.75rem' }}>
+              Your financial future
+              <br />
+              <span style={{ color: 'rgba(255,255,255,0.4)' }}>starts here.</span>
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9375rem', lineHeight: 1.7, maxWidth: '380px', margin: '0 auto' }}>
+              Join millions who trust Capital LIfe for secure, modern banking.
+            </p>
+          </div>
+        </div>
 
-                    {/* Middle - Features */}
-                    <div style={{ position: 'relative', zIndex: 1 }}>
-                        <h2 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.2, marginBottom: '0.5rem' }}>
-                            Your financial future
-                            <br />
-                            <span style={{ color: 'rgba(255,255,255,0.4)' }}>starts here.</span>
-                        </h2>
-                        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.9375rem', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '380px' }}>
-                          Join millions who trust Capital LIfe for secure, modern banking.
-                        </p>
+        {/* ─── RIGHT FORM PANEL ────────────── */}
+        <div className="auth-form-panel">
+          {/* Back to home */}
+          <Link href={home()} className="auth-back-link">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Back to home
+          </Link>
 
-                        <div>
-                            <div className="auth-feature-item" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '1.5rem' }}>
-                                <div className="auth-feature-icon">
-                                    <Shield size={20} />
-                                </div>
-                                <div>
-                                    <div className="auth-feature-title">Bank-Grade Security</div>
-                                    <div className="auth-feature-desc">256-bit encryption and real-time fraud monitoring protect every transaction.</div>
-                                </div>
-                            </div>
-
-                            <div className="auth-feature-item" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                                <div className="auth-feature-icon">
-                                    <CreditCard size={20} />
-                                </div>
-                                <div>
-                                    <div className="auth-feature-title">No Hidden Fees</div>
-                                    <div className="auth-feature-desc">$0 monthly fees, no minimums, and free overdraft protection.</div>
-                                </div>
-                            </div>
-
-                            <div className="auth-feature-item" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                                <div className="auth-feature-icon">
-                                    <Lock size={20} />
-                                </div>
-                                <div>
-                                    <div className="auth-feature-title">FDIC Insured</div>
-                                    <div className="auth-feature-desc">Your deposits are insured up to $250,000 by the FDIC.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Bottom - Copyright */}
-                    <div style={{ position: 'relative', zIndex: 1 }}>
-                        <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.75rem' }}>
-                        © {new Date().getFullYear()} Capital LIfe. All rights reserved.
-                        </p>
-                    </div>
-                </div>
-
-                {/* ─── RIGHT FORM PANEL ────────────── */}
-                <div className="auth-form-panel">
-                    {/* Back to home */}
-                    <Link href={home()} className="auth-back-link">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        Back to home
-                    </Link>
-
-                    <div className="auth-form-container">
-                        {/* Mobile logo */}
-                        <div className="lg:hidden" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
-                            <Link href={home()} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-                            <img src="/CapitalOneLogo.png" alt="Capital LIfe" style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '999px' }} />
-                                <span style={{ color: '#004977', fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
-                              Capital LIfe
-                                </span>
-                            </Link>
-                        </div>
-
-                        {/* Title */}
-                        <div style={{ marginBottom: '2rem' }}>
-                            <div style={{ width: '48px', height: '3px', background: '#D03027', borderRadius: '4px', marginBottom: '1.25rem' }} />
-                            <h1 style={{
-                                fontSize: '1.625rem',
-                                fontWeight: 800,
-                                color: '#1A2332',
-                                letterSpacing: '-0.03em',
-                                lineHeight: 1.2,
-                                marginBottom: '0.5rem',
-                            }}>
-                                {title}
-                            </h1>
-                            <p style={{
-                                color: '#6B7B8D',
-                                fontSize: '0.9375rem',
-                                lineHeight: 1.6,
-                            }}>
-                                {description}
-                            </p>
-                        </div>
-
-                        {/* Form content */}
-                        {children}
-
-                        {/* Trust footer */}
-                        <div className="auth-trust-footer">
-                            <div className="auth-trust-item">
-                                <Lock size={12} />
-                                <span>Encrypted</span>
-                            </div>
-                            <div className="auth-trust-item">
-                                <Shield size={12} />
-                                <span>FDIC Insured</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div className="auth-form-container">
+            {/* Mobile logo */}
+            <div className="lg:hidden" style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+              <Link href={home()} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+                <img src="/CapitalOneLogo.png" alt="Capital LIfe" style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '999px' }} />
+                <span style={{ color: '#004977', fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
+                  Capital LIfe
+                </span>
+              </Link>
             </div>
-        </>
-    );
+
+            {/* Title */}
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ width: '48px', height: '3px', background: '#D03027', borderRadius: '4px', marginBottom: '1.25rem' }} />
+              <h1 style={{
+                fontSize: '1.625rem',
+                fontWeight: 800,
+                color: '#1A2332',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.2,
+                marginBottom: '0.5rem',
+              }}>
+                {title}
+              </h1>
+              <p style={{
+                color: '#6B7B8D',
+                fontSize: '0.9375rem',
+                lineHeight: 1.6,
+              }}>
+                {description}
+              </p>
+            </div>
+
+            {/* Form content */}
+            {children}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
