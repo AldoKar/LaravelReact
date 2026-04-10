@@ -38,7 +38,7 @@ const getStoredAppearance = (): Appearance => {
 };
 
 const isDarkMode = (appearance: Appearance): boolean => {
-    return appearance === 'dark' || (appearance === 'system' && prefersDark());
+    return false; // Force light mode
 };
 
 const applyTheme = (appearance: Appearance): void => {
@@ -75,13 +75,10 @@ export function initializeTheme(): void {
         return;
     }
 
-    if (!localStorage.getItem('appearance')) {
-        localStorage.setItem('appearance', 'system');
-        setCookie('appearance', 'system');
-    }
-
-    currentAppearance = getStoredAppearance();
-    applyTheme(currentAppearance);
+    localStorage.setItem('appearance', 'light');
+    setCookie('appearance', 'light');
+    currentAppearance = 'light';
+    applyTheme('light');
 
     // Set up system theme change listener
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
