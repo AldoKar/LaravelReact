@@ -1,0 +1,17 @@
+[90m= [39m[34;4mApp\Models\User[39;24m {#8799
+    [34mid[39m: [35m13[39m,
+    [34mname[39m: [32m"[39m[32mRoberto Ochoa[39m[32m"[39m,
+    [34memail[39m: [32m"[39m[32mroberto@capitallife.com[39m[32m"[39m,
+    [34memail_verified_at[39m: [36mnull[39m,
+    #[33mpassword[39m: [32m"[39m\$[32m2y[39m\$[32m12[39m\$[32mOq8H6rvneiOsTmAu0RQamOBysoVu6K/FK.zcRNTMQXIvk.e99l4nu[39m[32m"[39m,
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-04-10 16:43:20[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-04-10 16:43:20[39m[32m"[39m,
+    #[33mtwo_factor_secret[39m: [36mnull[39m,
+    #[33mtwo_factor_recovery_codes[39m: [36mnull[39m,
+    [34mtwo_factor_confirmed_at[39m: [36mnull[39m,
+    [34mrole[39m: [32m"[39m[32mparent[39m[32m"[39m,
+    [34mparent_id[39m: [36mnull[39m,
+    [34mbalance[39m: [32m"[39m[32m5000.00[39m[32m"[39m,
+    [34mphone[39m: [32m"[39m[32m526131003451[39m[32m"[39m,
+  }
