@@ -58,13 +58,13 @@
   - [x] 7.4 Registrar rutas `/children/{child}/restrictions/schedule`
   - [x] 7.5 Crear UI en `resources/js/pages/restrictions/index.tsx` para configurar horarios (selector de días y horas)
 
-- [ ] 8. Restricciones de categoría (Req 8)
-  - [ ] 8.1 Crear migración y modelo `CategoryRestriction` con relación `belongsTo User (child)`
-  - [ ] 8.2 Agregar métodos `storeCategory`, `destroyCategory` en `RestrictionController`
-  - [ ] 8.3 Agregar validación de categoría en `ExpenseController@store`: verificar si la categoría está bloqueada o si se alcanzó el límite mensual
-  - [ ] 8.4 Registrar rutas `/children/{child}/restrictions/category`
-  - [ ] 8.5 Extender UI de restricciones para gestionar categorías bloqueadas y límites
-  - [ ] 8.6 Mostrar categorías bloqueadas y límites activos en el dashboard del hijo
+- [x] 8. Restricciones de categoría (Req 8)
+  - [x] 8.1 Crear migración y modelo `CategoryRestriction` con relación `belongsTo User (child)`
+  - [x] 8.2 Agregar métodos `storeCategory`, `destroyCategory` en `RestrictionController`
+  - [x] 8.3 Agregar validación de categoría en `ExpenseController@store`: verificar si la categoría está bloqueada o si se alcanzó el límite mensual
+  - [x] 8.4 Registrar rutas `/children/{child}/restrictions/category`
+  - [x] 8.5 Extender UI de restricciones para gestionar categorías bloqueadas y límites
+  - [x] 8.6 Mostrar categorías bloqueadas y límites activos en el dashboard del hijo
 
 ---
 

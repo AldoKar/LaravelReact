@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryRestriction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -81,6 +82,23 @@ class DashboardController extends Controller
                 ]);
         }
 
+        // Get category restrictions if target user is a child
+        $categoryRestrictions = [];
+        if ($targetUser->isChild()) {
+            $categoryRestrictions = CategoryRestriction::where('child_id', $targetUser->id)
+                ->with('category')
+                ->get()
+                ->map(fn($restriction) => [
+                    'id' => $restriction->id,
+                    'category' => [
+                        'id' => $restriction->category->id,
+                        'name' => $restriction->category->name,
+                    ],
+                    'type' => $restriction->type,
+                    'monthly_limit' => $restriction->monthly_limit ? (float) $restriction->monthly_limit : null,
+                ]);
+        }
+
         return Inertia::render('dashboard', [
             'stats' => [
                 'totalThisMonth' => (float) $totalThisMonth,
@@ -100,6 +118,7 @@ class DashboardController extends Controller
                 'balance' => (float) $user->balance,
             ],
             'children' => $children,
+            'categoryRestrictions' => $categoryRestrictions,
         ]);
     }
 }

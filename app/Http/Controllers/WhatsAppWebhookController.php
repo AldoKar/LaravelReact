@@ -51,7 +51,10 @@ class WhatsAppWebhookController extends Controller
 
                         Log::info("WhatsApp Message received from {$from}: {$text}");
 
-                        $user = \App\Models\User::where('phone', $from)->first();
+                        // Extraemos solo los ultimos 10 digitos del telefono y buscamos coincidencias.
+                        // Esto arregla el formato internacional estricto de WhatsApp (ej. 521 vs 52).
+                        $phoneObj = substr($from, -10);
+                        $user = \App\Models\User::where('phone', 'like', '%' . $phoneObj)->first();
 
                         if (! $user) {
                             $replyText = "Lo siento, tu número no está registrado en Capital Family.";
@@ -71,7 +74,7 @@ class WhatsAppWebhookController extends Controller
                         
                         if ($phoneId && $token) {
                             \Illuminate\Support\Facades\Http::withToken($token)
-                                ->post("https://graph.facebook.com/v22.0/{$phoneId}/messages", [
+                                ->post("https://graph.facebook.com/v25.0/{$phoneId}/messages", [
                                     'messaging_product' => 'whatsapp',
                                     'to' => $from,
                                     'type' => 'text',

@@ -4,9 +4,18 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeftIcon, ClockIcon, SaveIcon } from 'lucide-react';
+import { ArrowLeftIcon, ClockIcon, SaveIcon, ShieldBanIcon, TrashIcon } from 'lucide-react';
 import { index as childrenIndex } from '@/routes/children';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { router } from '@inertiajs/react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface Child {
   id: number;
@@ -22,9 +31,22 @@ interface ScheduleRestriction {
   end_time: string;
 }
 
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface CategoryRestriction {
+  id: number;
+  category: Category;
+  type: 'blocked' | 'limited';
+  monthly_limit: number | null;
+}
+
 interface RestrictionsIndexProps {
   child: Child;
   scheduleRestriction: ScheduleRestriction | null;
+  categoryRestrictions: CategoryRestriction[];
 }
 
 const DAYS_OF_WEEK = [
@@ -37,11 +59,28 @@ const DAYS_OF_WEEK = [
   { value: 'sunday', label: 'Domingo' },
 ];
 
-export default function RestrictionsIndex({ child, scheduleRestriction }: RestrictionsIndexProps) {
+export default function RestrictionsIndex({ child, scheduleRestriction, categoryRestrictions }: RestrictionsIndexProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+
   const { data, setData, post, put, processing, errors } = useForm({
     days: scheduleRestriction?.days || [],
     start_time: scheduleRestriction?.start_time || '09:00',
     end_time: scheduleRestriction?.end_time || '18:00',
+  });
+
+  const categoryForm = useForm({
+    category_id: '',
+    type: 'blocked' as 'blocked' | 'limited',
+    monthly_limit: '',
+  });
+
+  // Fetch categories on mount
+  useState(() => {
+    fetch('/categories')
+      .then((res) => res.json())
+      .then((data) => setCategories(data.categories))
+      .catch(console.error);
   });
 
   const handleSubmit: FormEventHandler = (e) => {
@@ -66,6 +105,26 @@ export default function RestrictionsIndex({ child, scheduleRestriction }: Restri
     
     setData('days', currentDays);
   };
+
+  const handleCategorySubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+    categoryForm.post(`/children/${child.id}/restrictions/category`, {
+      onSuccess: () => {
+        categoryForm.reset();
+        setShowCategoryForm(false);
+      },
+    });
+  };
+
+  const handleDeleteRestriction = (restrictionId: number) => {
+    if (confirm('¿Estás seguro de eliminar esta restricción?')) {
+      router.delete(`/children/${child.id}/restrictions/category/${restrictionId}`);
+    }
+  };
+
+  const availableCategories = categories.filter(
+    (cat) => !categoryRestrictions.some((r) => r.category.id === cat.id)
+  );
 
   return (
     <>
@@ -191,33 +250,185 @@ export default function RestrictionsIndex({ child, scheduleRestriction }: Restri
 
           <Card>
             <CardHeader>
-              <CardTitle>Información</CardTitle>
-              <CardDescription>Cómo funcionan las restricciones de horario</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>
-                Las restricciones de horario te permiten controlar cuándo {child.name} puede
-                registrar gastos en la aplicación.
-              </p>
-              <p>
-                Si {child.name} intenta registrar un gasto fuera del horario permitido, el sistema
-                lo rechazará automáticamente.
-              </p>
-              <p>
-                Puedes modificar los días y horarios en cualquier momento, y los cambios se
-                aplicarán de inmediato.
-              </p>
-              {!scheduleRestriction && (
-                <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950">
-                  <p className="text-amber-800 dark:text-amber-200">
-                    Actualmente no hay restricciones de horario configuradas. {child.name} puede
-                    registrar gastos en cualquier momento.
-                  </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ShieldBanIcon className="h-5 w-5 text-primary" />
+                  <div>
+                    <CardTitle>Restricciones de categoría</CardTitle>
+                    <CardDescription>
+                      Bloquea o limita gastos en categorías específicas
+                    </CardDescription>
+                  </div>
                 </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {categoryRestrictions.length > 0 && (
+                <div className="space-y-2">
+                  {categoryRestrictions.map((restriction) => (
+                    <div
+                      key={restriction.id}
+                      className="flex items-center justify-between rounded-lg border p-3"
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium">{restriction.category.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {restriction.type === 'blocked'
+                            ? 'Bloqueada'
+                            : `Límite: $${restriction.monthly_limit}/mes`}
+                        </p>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteRestriction(restriction.id)}
+                      >
+                        <TrashIcon className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {!showCategoryForm && availableCategories.length > 0 && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setShowCategoryForm(true)}
+                >
+                  Agregar restricción
+                </Button>
+              )}
+
+              {showCategoryForm && (
+                <form onSubmit={handleCategorySubmit} className="space-y-4 rounded-lg border p-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="category_id">Categoría</Label>
+                    <Select
+                      value={categoryForm.data.category_id}
+                      onValueChange={(value) => categoryForm.setData('category_id', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona una categoría" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableCategories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id.toString()}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {categoryForm.errors.category_id && (
+                      <p className="text-sm text-destructive">{categoryForm.errors.category_id}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label>Tipo de restricción</Label>
+                    <RadioGroup
+                      value={categoryForm.data.type}
+                      onValueChange={(value: 'blocked' | 'limited') =>
+                        categoryForm.setData('type', value)
+                      }
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="blocked" id="blocked" />
+                        <Label htmlFor="blocked" className="font-normal">
+                          Bloquear completamente
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="limited" id="limited" />
+                        <Label htmlFor="limited" className="font-normal">
+                          Establecer límite mensual
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  {categoryForm.data.type === 'limited' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="monthly_limit">Límite mensual ($)</Label>
+                      <Input
+                        id="monthly_limit"
+                        type="number"
+                        step="0.01"
+                        min="0.01"
+                        value={categoryForm.data.monthly_limit}
+                        onChange={(e) => categoryForm.setData('monthly_limit', e.target.value)}
+                        placeholder="0.00"
+                      />
+                      {categoryForm.errors.monthly_limit && (
+                        <p className="text-sm text-destructive">
+                          {categoryForm.errors.monthly_limit}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => {
+                        setShowCategoryForm(false);
+                        categoryForm.reset();
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="flex-1"
+                      disabled={categoryForm.processing || !categoryForm.data.category_id}
+                    >
+                      {categoryForm.processing ? 'Guardando...' : 'Guardar'}
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {availableCategories.length === 0 && !showCategoryForm && (
+                <p className="text-center text-sm text-muted-foreground">
+                  Todas las categorías tienen restricciones configuradas
+                </p>
               )}
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Información</CardTitle>
+            <CardDescription>Cómo funcionan las restricciones</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <div>
+              <p className="font-medium text-foreground">Restricciones de horario</p>
+              <p>
+                Las restricciones de horario te permiten controlar cuándo {child.name} puede
+                registrar gastos en la aplicación.
+              </p>
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Restricciones de categoría</p>
+              <p>
+                Puedes bloquear completamente una categoría o establecer un límite mensual de gasto.
+                Si {child.name} intenta exceder el límite, el sistema rechazará el gasto.
+              </p>
+            </div>
+            {!scheduleRestriction && categoryRestrictions.length === 0 && (
+              <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950">
+                <p className="text-amber-800 dark:text-amber-200">
+                  Actualmente no hay restricciones configuradas. {child.name} puede registrar gastos
+                  en cualquier momento y categoría.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </>
   );

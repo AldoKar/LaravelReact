@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenseRequest;
+use App\Models\CategoryRestriction;
 use App\Models\Expense;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -107,7 +108,38 @@ class ExpenseController extends Controller
                 }
             }
             
-            // TODO: Implement category restriction validation (Requirement 8)
+            // Check category restriction (Requirement 8)
+            $categoryRestriction = CategoryRestriction::where('child_id', $user->id)
+                ->where('category_id', $validated['category_id'])
+                ->first();
+            
+            if ($categoryRestriction) {
+                // Check if category is blocked
+                if ($categoryRestriction->type === 'blocked') {
+                    return back()->withErrors([
+                        'category_id' => 'Tu padre ha bloqueado esta categoría'
+                    ]);
+                }
+                
+                // Check if monthly limit is reached
+                if ($categoryRestriction->type === 'limited') {
+                    $startOfMonth = now()->startOfMonth();
+                    $endOfMonth = now()->endOfMonth();
+                    
+                    $totalSpentThisMonth = Expense::where('user_id', $user->id)
+                        ->where('category_id', $validated['category_id'])
+                        ->whereBetween('date', [$startOfMonth, $endOfMonth])
+                        ->sum('amount');
+                    
+                    $newTotal = $totalSpentThisMonth + $validated['amount'];
+                    
+                    if ($newTotal > $categoryRestriction->monthly_limit) {
+                        return back()->withErrors([
+                            'category_id' => 'Has alcanzado el límite mensual para esta categoría'
+                        ]);
+                    }
+                }
+            }
         }
 
         DB::transaction(function () use ($user, $validated): void {

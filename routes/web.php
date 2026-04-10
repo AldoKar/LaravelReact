@@ -38,6 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('children.restrictions.schedule.store');
     Route::put('children/{child}/restrictions/schedule', [RestrictionController::class, 'updateSchedule'])
         ->name('children.restrictions.schedule.update');
+    Route::post('children/{child}/restrictions/category', [RestrictionController::class, 'storeCategory'])
+        ->name('children.restrictions.category.store');
+    Route::delete('children/{child}/restrictions/category/{restriction}', [RestrictionController::class, 'destroyCategory'])
+        ->name('children.restrictions.category.destroy');
 });
 
 require __DIR__.'/settings.php';
