@@ -32,6 +32,8 @@ Fecha: 2026-04-10
 
 Capital Life es una aplicacion web de finanzas familiares construida con Laravel + Inertia + React que permite a los padres gestionar el dinero de sus hijos de forma educativa y controlada.
 
+(En carpeta de Kiro puedes encontrar los requerimientos del proyecto con sus historias de usuarios)
+
 ### Problema que Resuelve
 Muchas familias buscan ensenar educacion financiera a sus hijos, pero carecen de herramientas digitales que combinen:
 - Control parental sobre gastos
@@ -59,6 +61,11 @@ Capital Life ofrece una plataforma completa donde:
 - Integracion WhatsApp + IA para operaciones conversacionales
 - Visualizacion de datos financieros con graficas interactivas
 - Sistema de autenticacion robusto con 2FA
+
+### Uso de IA
+Se utilizó inteligencia artificial en varias etapas del proyecto. Por un lado, nos ayudó a rebotar ideas y a investigar las prácticas actuales de la industria: qué se está haciendo y qué oportunidades aún no se están explotando.
+Además, la IA fue clave para definir la estructura del proyecto y diseñar una división eficiente de las tareas entre los miembros del equipo.
+Finalmente, también participó activamente en la creación y optimización del código.
 
 ## 2. Stack Tecnologico
 
